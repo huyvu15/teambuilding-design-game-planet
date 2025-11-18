@@ -1,0 +1,2077 @@
+<meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+    <title>Galaxy Education - Planets</title>
+    <!-- <link rel="preload" as="image" href="https://raw.githubusercontent.com/huyvu15/teambuilding-design-game-planet/main/frontend/image/Background/123.png" /> -->
+    <link rel="preload" as="video" href="https://raw.githubusercontent.com/huyvu15/teambuilding-design-game-planet/main/frontend/image/Video/Comp2.mp4">
+    <link rel="preload" as="image" href="https://raw.githubusercontent.com/huyvu15/teambuilding-design-game-planet/main/frontend/image/Image/Arrow.png">
+    <link rel="preload" as="image" href="https://raw.githubusercontent.com/huyvu15/teambuilding-design-game-planet/main/frontend/image/Image/Button-Send.png">
+    <link rel="preload" as="image" href="https://raw.githubusercontent.com/huyvu15/teambuilding-design-game-planet/main/frontend/image/Image/Input.png">
+    <link rel="stylesheet" href="game.css">
+    <link href="https://fonts.googleapis.com/css2?family=Potta+One&amp;display=swap" rel="stylesheet">
+    <script src="https://cdn.socket.io/4.5.4/socket.io.min.js"></script>
+
+    <style>
+        @media (max-width: 767px) {
+    #SECTION1 {
+        height: 1000px;
+    }
+}
+      #intro-container {
+        position: fixed;
+        inset: 0;
+        z-index: 100;
+        background-color: #000;
+        transition: opacity 1.5s ease-out;
+      }
+      #intro-container.fade-out {
+        opacity: 0;
+        pointer-events: none;
+      }
+      #introVideo {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+      }
+      .content-hidden {
+        opacity: 0;
+        transition: opacity 1.5s ease-in;
+      }
+      .intro-controls {
+        position: absolute;
+        bottom: 20px;
+        right: 20px;
+        z-index: 101;
+        display: flex;
+        gap: 15px;
+        align-items: center;
+      }
+      .intro-btn {
+        background: rgba(0, 0, 0, 0.5);
+        border: 1px solid rgba(255, 255, 255, 0.7);
+        color: white;
+        padding: 8px 16px;
+        border-radius: 20px;
+        cursor: pointer;
+        font-family: 'Potta One', cursive, Arial, sans-serif;
+        transition: background 0.2s;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+      .intro-btn:hover {
+        background: rgba(0, 0, 0, 0.8);
+      }
+      #sound-toggle-btn {
+        padding: 8px;
+        padding: 6px; /* Giảm padding để nút nhỏ hơn */
+        border-radius: 50%; /* Bo tròn nút */
+        width: 36px; /* Đặt chiều rộng và cao cố định */
+        height: 36px;
+      }
+      #sound-toggle-btn svg {
+        width: 24px;
+        height: 24px;
+        fill: white;
+        width: 20px; /* Giảm kích thước icon */
+        height: 20px;
+        fill: #cccccc; /* Đổi màu icon thành xám */
+      }
+      
+    </style>
+    <style>
+  * { box-sizing: border-box; }
+  
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+  
+  body {
+    overflow: hidden;
+    font-family: 'Potta One', cursive, Arial, sans-serif;
+    background-image: url("https://raw.githubusercontent.com/huyvu15/teambuilding-design-game-planet/main/frontend/image/Background/123.png");
+  background-position: center;
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+  }
+  .galaxy-container {
+    position: fixed;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    background: transparent; /* Đảm bảo container này trong suốt */
+    z-index: 0;
+  }
+  
+  /* Lớp tinh vân xa nhất */
+  .nebula-layer {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    opacity: 0.6;
+  }
+  
+  .nebula {
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(60px);
+    animation: nebulaPulse 8s ease-in-out infinite;
+  }
+  
+  .nebula-1 { width: 400px; height: 400px; background: radial-gradient(circle, rgba(138, 43, 226, 0.4) 0%, transparent 70%); top: 20%; left: 15%; animation-delay: 0s; }
+  .nebula-2 { width: 500px; height: 300px; background: radial-gradient(ellipse, rgba(65, 105, 225, 0.4) 0%, transparent 70%); top: 50%; right: 20%; animation-delay: 2s; }
+  .nebula-3 { width: 350px; height: 350px; background: radial-gradient(circle, rgba(147, 51, 234, 0.3) 0%, transparent 70%); bottom: 15%; left: 40%; animation-delay: 4s; }
+  .nebula-4 { width: 300px; height: 400px; background: radial-gradient(ellipse, rgba(30, 144, 255, 0.3) 0%, transparent 70%); top: 10%; right: 35%; animation-delay: 1s; }
+  .nebula-5 { width: 450px; height: 250px; background: radial-gradient(ellipse, rgba(123, 31, 162, 0.35) 0%, transparent 70%); bottom: 30%; right: 10%; animation-delay: 3s; }
+  
+  @keyframes nebulaPulse {
+    0%, 100% { opacity: 0.4; transform: scale(1); }
+    50% { opacity: 0.7; transform: scale(1.1); }
+  }
+  
+  #star-canvas {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+  }
+  
+  .center-glow {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 800px;
+    height: 800px;
+    background: radial-gradient(circle, rgba(255, 255, 255, 0.03) 0%, transparent 60%);
+    pointer-events: none;
+  }
+  body {
+    margin: 0;
+    background: #000 url("https://raw.githubusercontent.com/huyvu15/teambuilding-design-game-planet/main/frontend/image/Background/123.png") center / cover no-repeat fixed;
+    color: #fff;
+    font-family: 'Potta One', cursive;
+  }
+  
+  .game-screen { position: relative; min-height: 100vh;  }
+  .bg-video { position: fixed; inset: 0; width: 100%; height: 100%; object-fit: cover; z-index: 0; }
+  
+  .stage { position: relative; z-index: 1; min-height: 100vh; padding: 12px; }
+  
+  .galaxy-title {
+    display:none;
+    position: fixed;
+    left: 50%;
+    top: 47%;
+    transform: translate(-50%, -50%);
+    max-width: min(80vw, 520px);
+    width: auto;
+    height: auto;
+    z-index: 1;
+    pointer-events: none;
+    filter: drop-shadow(0 16px 18px rgba(0,0,0,0.6));
+  }
+      
+  .planets {  
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    position: relative;
+    min-height: calc(100vh - 180px); /* sẽ được tinh chỉnh bởi JS */
+  }
+  
+  .planet { position: absolute; display: flex; align-items: center; justify-content: center; width: var(--size, 96px); height: var(--size, 96px); transform: scale(var(--scale, 1)); transition: transform 200ms ease; }
+  .planet .img { position: absolute; width: 100%; height: auto; transition: opacity 200ms ease; }
+  .planet .planet-message {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    padding: 6px 10px;
+    border-radius: 12px;
+    background: rgba(5, 10, 30, 0.75);
+    color: #f5f7ff;
+    font-weight: 700;
+    font-size: 12px;
+    line-height: 1.2;
+    text-align: center;
+    letter-spacing: 0.6px;
+    text-transform: uppercase;
+    text-shadow: 0 2px 6px rgba(0,0,0,0.6);
+    pointer-events: none;
+    display: none;
+    max-width: 120px;
+    word-break: break-word;
+  }
+  .planet.show-message .planet-message {
+    display: block;
+  }
+
+
+  
+  .planet .arrow { position: absolute; top: -18px; width: 28px; height: auto; display: none; }
+  .planet.current .arrow { display: block; }
+  
+  .message-box {
+      position: fixed;
+      left: 0;
+      right: 0;
+      /* height: var(--messageBoxHeight); */
+      bottom: var(--messageBoxHeight);
+      /* top: auto; */
+      display: grid;
+      justify-items: center;
+      align-content: end;
+      row-gap: 12px;
+      z-index: 2;
+  }
+  
+  .message-box__layer {
+    position: relative;
+    display: grid;
+    place-items: center;
+  }
+  
+  .message-box__layer--input {
+    margin-bottom: 8px;
+  }
+  
+  .message-box__layer--ranking {
+    margin-top: 12px;
+  }
+  
+  .message-box__input.hidden {
+    display: none;
+  }
+  
+  .message-box.hidden {
+    display: none;
+  }
+  
+  .message-box .input-bg { width: min(92vw, 320px); height: auto; display: block; }
+  .message-input {
+    position: absolute;
+    width: calc(min(92vw, 320px) - 48px);
+    padding: 10px 14px;
+    border: none;
+    outline: none;
+    background: transparent;
+    color: #e6ecff;
+    font-weight: 600;
+    /* letter-spacing: 0.6px; */
+    text-transform: uppercase;
+    font-family: Potta One, cursive;
+    font-size: 12px;
+    text-align: center;
+  }
+  
+  .send-btn { background: none; border: 0; padding: 0; cursor: pointer; }
+  .send-btn img { width: 120px; height: auto; display: block; }
+  
+  .planet.current {
+    position: fixed !important;
+    top: auto !important;
+    left: 50% !important;
+    right: auto !important;
+    bottom: calc(var(--messageBoxHeight) + 10% )!important ;
+    transform: translateX(-50%) scale(var(--scale, 1.25)) !important;
+    z-index: 2;
+    width: 150px !important; 
+    height: 150px !important;
+   
+
+        
+  }
+  
+  @keyframes glow {
+    0% {
+      filter: drop-shadow(0 0 10px rgb(0, 238, 255)) brightness(2);
+    }
+    50% {
+      filter: drop-shadow(0 0 30px rgb(78, 105, 255)) brightness(2.5);
+    }
+    100% {
+      filter: drop-shadow(0 0 20px rgb(219, 73, 255)) brightness(2);
+    }
+  }
+
+
+  @keyframes glow2 {
+    0% {
+      filter: drop-shadow(0 0 5px rgb(0, 238, 255)) brightness(2);
+    }
+    50% {
+      filter: drop-shadow(0 0 10px rgb(78, 105, 255)) brightness(2.5);
+    }
+    100% {
+      filter: drop-shadow(0 0 15px rgb(219, 73, 255)) brightness(2);
+    }
+  }
+
+
+  .planet.current .img { width: 100%; }
+  .planet.current .arrow { top: -32px; width: 34px; }
+  
+  .planet.selected {
+    border-radius: 50%;
+  
+    transition: box-shadow 0.3s ease-in-out;
+  }
+  
+  .planet.selected .img {
+    filter: brightness(2) contrast(1.05) drop-shadow(0 0 8px #7b5bfc) drop-shadow(0 0 16px #7b5bfc);
+    transition: filter 0.3s ease-in-out;
+  }
+  .planet.selectable {
+    filter: brightness(1.1);
+    transition: filter 200ms ease;
+  }
+  
+  .planet.selectable:hover {
+    filter: brightness(1.3);
+    transform: scale(1.05);
+  }
+  
+  .choose-modal {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.45);
+    display: none;
+    place-items: center;
+    z-index: 20;
+  }
+  .choose-modal.show { display: grid; }
+  .choose-modal__box {
+    position: relative;
+    width: min(92vw, 520px);
+    aspect-ratio: 520 / 220;
+    display: grid;
+    place-items: center;
+  }
+  .choose-modal__bg {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    filter: drop-shadow(0 10px 24px rgba(0,0,0,0.5));
+  }
+  .choose-modal__content {
+    position: relative;
+    width: 100%;
+    padding: 24px 28px 18px;
+    display: grid;
+    justify-items: center;
+    gap: 14px;
+  }
+  .choose-modal__text {
+    margin: 0;
+    color: #e6ecff;
+    font-weight: 700;
+    letter-spacing: 0.6px;
+    text-transform: uppercase;
+    text-align: center;
+  }
+  .choose-modal__actions {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+  }
+  .choose-btn {
+    background: none;
+    border: 0;
+    padding: 0;
+    cursor: pointer;
+    position: relative;
+  }
+  .choose-btn img {
+    display: block;
+    width: 140px;
+    height: auto;
+  }
+  .choose-btn span {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    color: #3a1f00;
+    font-weight: 900;
+    letter-spacing: 0.8px;
+  }
+  
+  .topbar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: auto;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 8px;
+    z-index: 6;
+  }
+  
+  .pill {
+    background: rgba(0, 0, 0, 0.6);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    padding: 6px 12px;
+    border-radius: 999px;
+    font-size: 14px;
+    color: #fff;
+  }
+  
+  .pill--button {
+    border: none;
+    background: rgba(255, 255, 255, 0.92);
+    color: #050505;
+    cursor: pointer;
+    transition: transform 0.2s ease, background 0.2s ease, box-shadow 0.2s ease;
+    padding: 0;
+  }
+  
+  .pill--button:hover,
+  .pill--button:focus-visible {
+    background: rgba(255, 255, 255, 1);
+    transform: translateY(-1px);
+    outline: none;
+    box-shadow: 0 0 12px rgba(255, 255, 255, 0.6);
+  }
+  
+  
+  
+  
+  
+  .sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+  }
+  
+  .planet[data-planet="2"]  {     top: 40vh;
+    left: -17vw;
+    --size: 134px;
+    --scale: 2; }   
+  .planet[data-planet="3"]  { top: 4vh;
+    left: 22vw;
+    --size: 51px;
+    --scale: 0.95; }
+  .planet[data-planet="4"]  {     top: 0vh;
+    left: 39vw;
+    --size: 50px;
+    --scale: -1.07;}  /* Phải trên */
+  .planet[data-planet="5"]  {     top: 33vh;
+    left: 91vw;
+    --size: 85px;
+    --scale: 3.85; } /* Giữa trên giữa */
+  .planet[data-planet="6"]  { top: 0vh;
+    left: 0vw;
+    --size: 68px;
+    --scale: 0.9;}  /* Trái giữa */
+  .planet[data-planet="7"]  {        top: 4vh;
+    left: -35vw;
+    --size: 184px;
+    --scale: 0.95;
+    rotate: 10px;
+    transform: rotate(323deg); 
+  }  /* Phải giữa */
+  .planet[data-planet="8"]  { top: 23vh;
+    left: 22vw;
+    --size: 61px;
+    --scale: 0.92; }  /* Phải dưới */
+  .planet[data-planet="9"]  {         top: 13vh;
+    left: 32vw;
+    --size: 71px;
+    --scale: 0.95; } /* Giữa dưới trái */
+  .planet[data-planet="10"] {         top: -304px;
+    left: 49vw;
+    --size: 500px;
+    --scale: 0.98;
+  }  /* Hành tinh lớn ở giữa dưới */
+  
+  
+  .win-popup {
+    position: fixed;
+    inset: 0;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    z-index: 30;
+    pointer-events: none;
+  }
+  
+  .win-popup img {
+    max-width: min(80vw, 420px);
+    width: 100%;
+    height: auto;
+    filter: drop-shadow(0 16px 32px rgba(0,0,0,0.6));
+  }
+  
+  .win-popup.show {
+    display: flex;
+    animation: win-popup-fade 0.3s ease forwards;
+  }
+  
+  @keyframes win-popup-fade {
+    from { opacity: 0; transform: scale(0.9); }
+    to { opacity: 1; transform: scale(1); }
+  }
+  
+  .popup {
+    position: fixed;
+    inset: 0;
+    display: grid;
+    place-items: center;
+    background: rgba(0, 0, 0, 0.65);
+    backdrop-filter: blur(8px);
+    z-index: 50;
+    opacity: 1;
+    transition: opacity 0.3s ease;
+  }
+  
+  .popup.hidden {
+    opacity: 0;
+    pointer-events: none;
+  }
+  
+  .popup-content {
+    position: relative;
+    width: 90%;
+    max-width: 280px;
+    padding: 28px 36px;
+    border-radius: 16px;
+    text-align: center;
+    background: rgba(20, 24, 40, 0.8);
+    border: 1px solid rgba(120, 180, 255, 0.4);
+    color: #e0e6ff;
+    box-shadow: 0 0 25px rgba(120, 180, 255, 0.3),
+                0 0 60px rgba(80, 150, 255, 0.2);
+    backdrop-filter: blur(10px);
+    animation: fadeInUp 0.5s ease;
+  }
+  
+  @keyframes fadeInUp {
+    from {
+      opacity: 0;
+      transform: translateY(16px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+  
+  .close-btn {
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    width: 32px;
+    height: 32px;
+    border: none;
+    border-radius: 50%;
+    background: rgba(120, 180, 255, 0.2);
+    color: #e0e6ff;
+    font-size: 22px;
+    line-height: 32px;
+    cursor: pointer;
+    transition: background 0.2s ease, transform 0.2s ease;
+  }
+  
+  .close-btn:hover {
+    background: rgba(120, 180, 255, 0.35);
+    transform: scale(1.05);
+  }
+  
+  #popupTitle {
+    font-size: 24px;
+    font-weight: 700;
+    margin: 0 0 12px;
+    text-shadow: 0 0 10px #5ec8ff, 0 0 20px #5ec8ff;
+    letter-spacing: 1px;
+  }
+  
+  .typing {
+    margin: 0;
+    white-space: pre-wrap;
+    line-height: 1.6;
+    font-size: 17px;
+    color: #dfe8ff;
+    text-shadow: 0 0 6px rgba(120, 180, 255, 0.4);
+  }
+  
+  .rules-popup {
+    position: fixed;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(0, 0, 0, 0.45);
+    backdrop-filter: blur(2px);
+    z-index: 40;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s ease;
+  }
+  
+  .rules-popup.show {
+    opacity: 1;
+    pointer-events: auto;
+  }
+  
+  .rules-popup__content {
+    position: relative;
+    width: min(92vw, 420px);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 16px;
+  }
+  
+  .rules-popup__logo {
+    width: min(80%, 280px);
+    height: auto;
+    z-index: 2;
+  }
+  
+  .rules-popup__body {
+    position: relative;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+  }
+  
+  .rules-popup__bg {
+    width: 100%;
+    height: 50vh;
+    display: block;
+  }
+  
+  .rules-popup__text {
+    position: absolute;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
+    text-align: justify;
+    color: #f8f3ff;
+    width: 70%;
+    top: 10%;
+    height:40vh;
+  }
+  .rules-popup__text h2 {
+    font-size: 19px;
+    margin: 0;
+    /* letter-spacing: 1px; */
+    font-weight: 700;
+    font-family: 'Potta One', cursive;
+  }
+  
+  .rules-popup__text p {
+    font-size: 14px;
+    /* font-weight: 500; */
+    font-family: 'Potta One', cursive;
+    text-align: center;
+    line-height: 1.4;
+  }
+  
+  
+  .planet-tooltip {
+    position: absolute;
+    top: -40px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    pointer-events: none;
+    min-width: 80px;
+  }
+  
+  .planet-tooltip.show {
+    display: flex;
+  }
+  
+  .planet-tooltip__bg {
+    /* width: 110px; */
+    height: auto;
+    display: block;
+  }
+  
+  .planet-tooltip__text {
+    position: absolute;
+    top: 38%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: #1d1f29;
+    font-weight: 700;
+    font-size: 10px;
+    line-height: 1.2;
+    letter-spacing: 0.4px;
+    text-transform: uppercase;
+    max-width: 90px;
+    text-align: center;
+    word-break: break-word;
+  }
+  
+  .ranking-panel {
+    position: relative;
+    display: grid;
+    place-items: center;
+    transform: translateY(0);
+  }
+  
+  .ranking-panel.hidden {
+    display: none;
+  }
+  
+  .ranking-panel__bg {
+    width: min(92vw, 340px);
+    height: 150px;
+    display: block;
+    filter: drop-shadow(0 10px 20px rgba(0, 0, 0, 0.45));
+    transform: translateY(8px);
+  }
+  
+  .ranking-panel__content {
+    position: absolute;
+    inset: 0;
+    font-family: 'Potta One', cursive;
+    padding: 30% 15% 20%;
+    display: grid;
+    align-content: center;
+    justify-items: center;
+    gap: 10px;
+    color: #e6ecff;
+    text-align: center;
+  }
+  
+  .ranking-panel__title {
+    margin: 0;
+    font-size: clamp(17px, 3.6vw, 22px);
+    letter-spacing: 1px;
+  }
+  
+  .ranking-panel__row {
+    margin: 0;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    font-weight: 700;
+    letter-spacing: 1.2px;
+    font-size: clamp(15px, 3.1vw, 19px);
+  }
+  
+  .ranking-panel__row span:last-child {
+    color: #ffe082;
+  }
+  .startGameBtn {
+    position: relative;
+    bottom: 10px;
+    background: linear-gradient(180deg, #ffde8a 0%, #ff7f2f 100%);
+    border: 2px solid #ffb23a;
+    color: #4b2000;
+    font-family: 'Potta One', cursive;
+    font-weight: 900;
+    font-size: 20px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    padding: 6px 30px;
+    border-radius: 12px;
+    cursor: pointer;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.25);
+    transition: all 0.2s 
+  ease;
+  }
+  .startGameBtn:hover {
+    transform: scale(1.05);
+    background: linear-gradient(180deg, #ffe299 0%, #ff9d4d 100%);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
+  }
+  
+  .startGameBtn:active {
+    transform: scale(0.97);
+    background: linear-gradient(180deg, #ffce70 0%, #ff6a00 100%);
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.4);
+  }
+  /* Nút GỬI */
+  #sendBtn,
+  .send-btn {
+    position: relative;
+    top: 10px;
+    background: linear-gradient(180deg, #ffde8a 0%, #ff7f2f 100%);
+    border: 2px solid #ffb23a;
+    color: #4b2000;
+    font-family: 'Potta One', cursive;
+    font-weight: 900;
+    font-size: 20px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    padding: 5px 40px;
+    border-radius: 12px;
+    cursor: pointer;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.25);
+    transition: all 0.2s 
+  ease;
+  }
+  
+  /* Hiệu ứng hover (rê chuột) */
+  #sendBtn:hover,
+  .send-btn:hover {
+    transform: scale(1.05);
+    background: linear-gradient(180deg, #ffe299 0%, #ff9d4d 100%);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
+  }
+  
+  /* Hiệu ứng khi bấm xuống */
+  #sendBtn:active,
+  .send-btn:active {
+    transform: scale(0.97);
+    background: linear-gradient(180deg, #ffce70 0%, #ff6a00 100%);
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.4);
+  }
+  
+  /* ====== Nút xem luật chơi ====== */
+  #viewRulesBtn{
+  
+   
+    border: none;
+    border-radius: 32px;
+    cursor: pointer;
+    background: transparent;
+    /* box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3), inset 0 2px 6px rgba(255, 255, 255, 0.3); */
+    transition: transform 0.25s 
+  ease, box-shadow 0.25s 
+  ease;
+    position: relative;
+    overflow: hidden;
+    }
+  
+  /* hiệu ứng hover nổi nhẹ */
+  #viewRulesBtn:hover {
+    transform: scale(1.08);
+    box-shadow:
+      0 8px 18px rgba(0, 0, 0, 0.45),
+      inset 0 2px 8px rgba(255, 255, 255, 0.4);
+  }
+  
+  /* hiệu ứng khi nhấn */
+  #viewRulesBtn:active {
+    transform: scale(0.95);
+    box-shadow:
+      0 2px 5px rgba(0, 0, 0, 0.4),
+      inset 0 1px 4px rgba(255, 255, 255, 0.2);
+  }
+  
+  /* Thêm ánh sáng nhẹ phía trên */
+  #viewRulesBtn::before {
+    content: "";
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: radial-gradient(circle at top, rgba(255, 255, 255, 0.6), transparent 70%);
+    opacity: 0.6;
+    transition: opacity 0.3s ease;
+  }
+  
+  #viewRulesBtn:hover::before {
+    opacity: 0.9;
+  }
+  
+  /* Thêm hiệu ứng phản chiếu nhẹ */
+  #viewRulesBtn::after {
+    content: "";
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 40%;
+    background: linear-gradient(to top, rgba(255, 255, 255, 0.2), transparent);
+  }
+  
+  /* Nếu bạn muốn có icon SVG bên trong */
+  #viewRulesBtn::marker,
+  #viewRulesBtn img {
+    width: 70%;
+    height: 70%;
+    object-fit: contain;
+    pointer-events: none;
+  }
+  .planet.glowing {
+  animation: glow 10s infinite alternate;
+  botton : calc(var(--messageBoxHeight) + 10% );
+}
+.planet.glowing2 {
+  animation: glow2 8s infinite alternate;
+}
+
+  
+  
+  
+  </style>
+  
+    <div id="intro-container">
+      <video id="introVideo" src="https://raw.githubusercontent.com/huyvu15/teambuilding-design-game-planet/main/frontend/image/Video/_kch_bn_202511151016_1qpf1.mp4" autoplay="" muted="" playsinline=""></video>
+      <div class="intro-controls">
+        <button id="sound-toggle-btn" class="intro-btn" aria-label="Bật/Tắt âm thanh">
+          <svg id="sound-off-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+            <path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77z"></path>
+            <path d="M2 2l20 20" stroke="currentColor" stroke-width="2" stroke-linecap="round"></path>
+          </svg>
+          <svg id="sound-on-icon" style="display: none;" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77z"></path></svg>
+        </button>
+      </div>
+    </div>
+
+    <div class="rules-popup" id="rulesPopup" aria-hidden="true">
+      <div class="rules-popup__content">
+        <!-- <img class="rules-popup__logo" src="https://raw.githubusercontent.com/huyvu15/teambuilding-design-game-planet/main/frontend/image/Image/logo.png" alt="Logo" /> -->
+        <div class="rules-popup__body">
+          <img class="rules-popup__bg" src="https://raw.githubusercontent.com/huyvu15/teambuilding-design-game-planet/main/frontend/image/Background/PopUp4.png" alt="Luật chơi">
+          <div class="rules-popup__text">
+            <h2>LUẬT CHƠI</h2>
+            <p>Nhiệm vụ của mỗi đội là đi tìm thông điệp của đội mình bằng cách tìm các thông điệp và ghép đối ứng với cách hành tinh khác. Ở mỗi chặng các đội hoàn thành nhanh nhất sẽ là đội thắng.</p>
+            <button id="startGameBtn" class="startGameBtn">BẮT ĐẦU</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="game-screen">
+      <div class="galaxy-container">
+        <div class="center-glow"></div>
+        
+        <!-- Lớp tinh vân -->
+        <div class="nebula-layer">
+            <div class="nebula nebula-1"></div>
+            <div class="nebula nebula-2"></div>
+            <div class="nebula nebula-3"></div>
+            <div class="nebula nebula-4"></div>
+            <div class="nebula nebula-5"></div>
+        </div>
+        <canvas id="star-canvas"></canvas>
+      </div>
+     
+      <main class="stage" aria-label="Hệ hành tinh" style="position: relative; z-index: 1;">
+        <img class="galaxy-title" src="https://raw.githubusercontent.com/huyvu15/teambuilding-design-game-planet/main/frontend/image/Image/Galaxy Symphony.png" alt="Galaxy Symphony">
+        <!-- Planet list -->
+        <ul class="planets">
+          <li class="planet current" data-planet="1" data-planet-id="br45br2">
+            <img class="img" src="https://raw.githubusercontent.com/huyvu15/teambuilding-design-game-planet/main/frontend/image/img-light/1.png" alt="Hành tinh 1">
+            <img class="arrow" src="https://raw.githubusercontent.com/huyvu15/teambuilding-design-game-planet/main/frontend/image/Image/Arrow.png" alt="Mũi tên">
+          </li>
+          <li class="planet" data-planet="2" data-planet-id="bl19br2">
+            <img class="img" src="https://raw.githubusercontent.com/huyvu15/teambuilding-design-game-planet/main/frontend/image/img-light/2.png" alt="Hành tinh 2">
+          </li>
+          <li class="planet" data-planet="3" data-planet-id="gr76br1">
+            <img class="img" src="https://raw.githubusercontent.com/huyvu15/teambuilding-design-game-planet/main/frontend/image/img-light/3.png" alt="Hành tinh 3">
+          </li>
+          <li class="planet" data-planet="4" data-planet-id="rd68br2">
+            <img class="img" src="https://raw.githubusercontent.com/huyvu15/teambuilding-design-game-planet/main/frontend/image/img-light/4.png" alt="Hành tinh 4">
+          </li>
+          <li class="planet" data-planet="5" data-planet-id="or34br1">
+            <img class="img" src="https://raw.githubusercontent.com/huyvu15/teambuilding-design-game-planet/main/frontend/image/img-light/5.png" alt="Hành tinh 5">
+          </li>
+          <li class="planet" data-planet="6" data-planet-id="bl52br1">
+            <img class="img" src="https://raw.githubusercontent.com/huyvu15/teambuilding-design-game-planet/main/frontend/image/img-light/6.png" alt="Hành tinh 6">
+          </li>
+          <li class="planet" data-planet="7" data-planet-id="br90br1">
+            <img class="img" src="https://raw.githubusercontent.com/huyvu15/teambuilding-design-game-planet/main/frontend/image/img-light/7.png" alt="Hành tinh 7">
+          </li>
+          <li class="planet" data-planet="8" data-planet-id="or82br2">
+            <img class="img" src="https://raw.githubusercontent.com/huyvu15/teambuilding-design-game-planet/main/frontend/image/img-light/8.png" alt="Hành tinh 8">
+          </li>
+          <li class="planet" data-planet="9" data-planet-id="gr21br2">
+            <img class="img" src="https://raw.githubusercontent.com/huyvu15/teambuilding-design-game-planet/main/frontend/image/img-light/9.png" alt="Hành tinh 9">
+          </li>
+          <li class="planet" data-planet="10" data-planet-id="rd57br1">
+            <img class="img" src="https://raw.githubusercontent.com/huyvu15/teambuilding-design-game-planet/main/frontend/image/img-light/10.png" alt="Hành tinh 10">
+          </li>
+        </ul>
+
+        <div class="topbar">
+          <button class="pill pill--button back-button" id="viewRulesBtn" type="button" aria-label="Xem luật chơi">
+          
+
+          </button>
+        </div>
+
+        <!-- Input + Send / Ranking -->
+        <section class="message-box" aria-label="Khu vực thông tin">
+          <div class="message-box__input message-box__layer message-box__layer--input" id="inputContainer">
+            <img class="input-bg" src="https://raw.githubusercontent.com/huyvu15/teambuilding-design-game-planet/main/frontend/image/Image/Input.png" alt="Khung nhập">
+            <input class="message-input" id="keywordInput" type="text" inputmode="text" placeholder="NHẬP THÔNG ĐIỆP CỦA BẠN">
+            <button id="sendBtn" class="send-btn">GỬI</button>
+          </div>
+
+          <div class="ranking-panel hidden message-box__layer message-box__layer--ranking" id="rankingPanel" aria-live="polite" aria-hidden="true">
+            <img class="ranking-panel__bg" src="https://raw.githubusercontent.com/huyvu15/teambuilding-design-game-planet/main/frontend/image/Image/PopUp2.png" alt="Popup xếp hạng">
+            <div class="ranking-panel__content">
+              <!-- <h3 class="ranking-panel__title">THỨ HẠNG CỦA BẠN LÀ:</h3> -->
+              <p class="ranking-panel__row"><span>Hạng đoán từ:</span><span id="rankingGuessValue">--</span></p>
+              <p class="ranking-panel__row"><span>Hạng đoán hành tinh:</span><span id="rankingMapValue">--</span></p>
+            </div>
+          </div>
+        </section>
+      </main>
+    </div>
+
+    <!-- Popup chọn hành tinh sau khi đoán đúng -->
+    <div class="choose-modal" id="chooseModal" aria-hidden="true">
+      <div class="choose-modal__box" role="dialog" aria-label="Chọn hành tinh">
+        <img class="choose-modal__bg" src="https://raw.githubusercontent.com/huyvu15/teambuilding-design-game-planet/main/frontend/image/Image/PopUp2.png" alt="Hộp thoại">
+        <div class="choose-modal__content">
+          <p class="choose-modal__text">BẠN CÓ MUỐN CHỌN HÀNH TINH...?</p>
+          <div class="choose-modal__actions">
+            <button id="chooseYesBtn" class="choose-btn yes" type="button" aria-label="Có">
+              <img src="https://raw.githubusercontent.com/huyvu15/teambuilding-design-game-planet/main/frontend/image/Image/Button-Send.png" alt="Có">
+            </button>
+            <button id="chooseNoBtn" class="choose-btn no" type="button" aria-label="Không">
+              <img src="https://raw.githubusercontent.com/huyvu15/teambuilding-design-game-planet/main/frontend/image/Image/Button-No.png" alt="Không">
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="win-popup" id="winPopup" aria-hidden="true">
+      <img src="https://raw.githubusercontent.com/huyvu15/teambuilding-design-game-planet/main/frontend/image/Image/Win.png" alt="Chiến thắng">
+    </div>
+
+    <div id="infoPopup" class="popup hidden" aria-hidden="true">
+      <div class="popup-content">
+        <button class="close-btn" id="closePopup" type="button" aria-label="Đóng">×</button>
+        <h2 id="popupTitle"></h2>
+        <p id="popupText" class="typing"></p>
+      </div>
+    </div>
+
+    <script>
+      // Lấy các element cần thiết cho intro
+      const introContainer = document.getElementById('intro-container');
+      const introVideo = document.getElementById('introVideo');
+      const soundToggleBtn = document.getElementById('sound-toggle-btn');
+      const soundOnIcon = document.getElementById('sound-on-icon');
+      const soundOffIcon = document.getElementById('sound-off-icon');
+      const rulesPopupForIntro = document.getElementById('rulesPopup');
+      const gameScreenForIntro = document.querySelector('.game-screen');
+
+      // Ẩn nội dung chính ban đầu
+      rulesPopupForIntro.classList.add('content-hidden');
+      gameScreenForIntro.classList.add('content-hidden');
+
+      (function(){
+        const API_BASE = (window.API_BASE || 'https://72a46e301fbb.ngrok-free.app');
+        const API = (path) => API_BASE + path;
+        
+        // Khởi tạo Socket.IO
+        const socket = window.io(API_BASE, {
+          transports: ['websocket'],
+          withCredentials: false,
+          reconnection: true
+        });
+        
+        // Định nghĩa io global cho sử dụng ở các hàm khác
+        window.io_socket = socket;
+    
+        const q = new URLSearchParams(location.search);
+        const initialBranch = Number(q.get('branch') || 1);
+        // ID hành tinh theo backend mới. Ưu tiên lấy từ URL, mặc định là rd57br1
+        const myPlanetIdFromQueryRaw = q.get('planet_id') || q.get('planet') || 'rd57br1';
+        const myPlanetIdFromQuery = myPlanetIdFromQueryRaw.trim();
+
+        function normalizePlanetId(value) {
+          return String(value || '').trim().toLowerCase();
+        }
+        
+        // Helper function để fetch với header ngrok và xử lý CORS
+        async function fetchAPI(path, options = {}) {
+          const url = API(path);
+          const headers = {
+            'ngrok-skip-browser-warning': 'true',
+            ...options.headers
+          };
+          
+          // Thêm Content-Type nếu có body và chưa có trong headers
+          if (options.body && !headers['Content-Type'] && !headers['content-type']) {
+            headers['Content-Type'] = 'application/json';
+          }
+          
+          try {
+            const response = await fetch(url, { 
+              ...options, 
+              headers,
+              mode: 'cors',
+              credentials: 'omit'
+            });
+            
+            // Kiểm tra content-type để đảm bảo là JSON
+            const contentType = response.headers.get('content-type');
+            if (contentType && contentType.includes('application/json')) {
+          return response;
+        }
+
+            // Nếu không phải JSON, đọc text để debug
+            const text = await response.text();
+            if (response.status >= 400) {
+              throw new Error(`API error ${response.status}: ${text.substring(0, 200)}`);
+            }
+            throw new Error(`Server trả về HTML thay vì JSON. Response: ${text.substring(0, 100)}`);
+          } catch (error) {
+            if (error.message && (error.message.includes('CORS') || error.message.includes('Failed to fetch'))) {
+              console.error('CORS error:', error);
+            }
+            throw error;
+          }
+        }
+        
+       
+        function parsePlanetId(planetId) {
+          if (!planetId) return null;
+          const normalized = normalizePlanetId(planetId);
+          if (normalized && planetBranchMap[normalized]) {
+            return { branch: planetBranchMap[normalized] };
+          }
+          
+          // Tìm pattern "br[number]" ở cuối để lấy branch nếu chưa có trong map
+          const branchMatch = normalized.match(/br(\d+)$/i);
+          if (branchMatch) {
+            const branch = Number(branchMatch[1]);
+            return { branch: branch };
+          }
+          
+          return null;
+        }
+        
+        // Helper lấy planet_id từ DOM element dựa trên planet number
+        function getPlanetIdByNum(planetNum) {
+          const el = document.querySelector(`.planet[data-planet="${planetNum}"]`);
+          const pid = el?.getAttribute('data-planet-id');
+          if (planetNum === 1 && !pid) {
+            return myPlanetIdFromQuery;
+          }
+          return pid || (planetNum === 1 ? myPlanetIdFromQuery : null);
+        }
+        
+        function getMyPlanetId() {
+          return myPlanetIdFromQuery;
+        }
+
+        function ensureMyPlanetSlot() {
+          if (!myPlanetIdFromQuery) return;
+          const normalizedMyId = normalizePlanetId(myPlanetIdFromQuery);
+          if (!normalizedMyId) return;
+          const currentPlanetEl = document.querySelector('.planet.current');
+          if (!currentPlanetEl) return;
+          
+          const currentId = currentPlanetEl.getAttribute('data-planet-id');
+          if (normalizePlanetId(currentId) === normalizedMyId) {
+            return;
+          }
+          
+          const duplicatedPlanetEl = planets.find((p) => normalizePlanetId(p.getAttribute('data-planet-id')) === normalizedMyId);
+          
+          if (duplicatedPlanetEl && duplicatedPlanetEl !== currentPlanetEl) {
+            const fallbackId = currentId || '';
+            if (fallbackId) {
+              duplicatedPlanetEl.setAttribute('data-planet-id', fallbackId);
+            } else {
+              duplicatedPlanetEl.removeAttribute('data-planet-id');
+            }
+          }
+          
+          currentPlanetEl.setAttribute('data-planet-id', myPlanetIdFromQuery);
+        }
+
+
+        const planets = Array.from(document.querySelectorAll('.planet'));
+        ensureMyPlanetSlot();
+        const teamInfo = document.getElementById('teamInfo');
+        const keywordInput = document.getElementById('keywordInput');
+        const sendBtn = document.getElementById('sendBtn');
+        const messageBox = document.querySelector('.message-box');
+        const chooseModal = document.getElementById('chooseModal');
+        const chooseYesBtn = document.getElementById('chooseYesBtn');
+        const chooseNoBtn = document.getElementById('chooseNoBtn');
+        const winPopup = document.getElementById('winPopup');
+        const rulesPopup = document.getElementById('rulesPopup');
+        const startGameBtn = document.getElementById('startGameBtn');
+        const viewRulesBtn = document.getElementById('viewRulesBtn');
+        const infoPopup = document.getElementById('infoPopup');
+        const popupTitle = document.getElementById('popupTitle');
+        const popupText = document.getElementById('popupText');
+        const closePopupBtn = document.getElementById('closePopup');
+        const inputContainer = document.getElementById('inputContainer');
+        const rankingPanel = document.getElementById('rankingPanel');
+        const rankingGuessValue = document.getElementById('rankingGuessValue');
+        const rankingMapValue = document.getElementById('rankingMapValue');
+
+        let myBranch = Number.isFinite(initialBranch) ? initialBranch : 1;
+        let stateData = []; // Danh sách planet_id đã sáng
+        let myTeamCorrect = false; // Đã đoán đúng chưa
+        let selectedPlanetId = null; // planet_id của hành tinh đang được chọn
+        let currentStage = 'guess'; // Stage: guess hoặc map
+        let availablePlanets = { sameBranch: [], otherBranch: [] }; // Danh sách planets có thể ghép
+        let otherBranchWords = new Map(); // Map planet_id -> thông điệp
+        let myPlanetMessage = '';
+        let winPopupTimeout = null;
+        let typingTimeouts = [];
+        let nextStepShown = false;
+        let latestRanking = null;
+
+        const branchColorInfo = {
+          1: { name: 'red', defaultImage: 1 },
+          2: { name: 'blue', defaultImage: 4 }
+        };
+
+        const planetBranchMap = {
+          'gr76br1': 1,
+          'bl52br1': 1,
+          'br90br1': 1,
+          'or82br2': 1,
+          'rd57br1': 1,
+          'br45br2': 2,
+          'bl19br2': 2,
+          'rd68br2': 2,
+          'or34br1': 2,
+          'gr21br2': 2
+        };
+
+        const planetImageMap = {
+          // Branch 1 - đỏ
+          'gr76br1': 1,
+          'bl52br1': 2,
+          'br90br1': 3,
+          'or82br2': 8,
+          'rd57br1': 10,
+          // Branch 2 - xanh
+          'br45br2': 4,
+          'bl19br2': 5,
+          'rd68br2': 6,
+          'or34br1': 7,
+          'gr21br2': 9
+        };
+
+        function getImageNumberForPlanet(planetId, planetNum = null) {
+          const normalizedId = normalizePlanetId(planetId);
+          if (!normalizedId) return planetNum || 1;
+          if (planetImageMap[normalizedId]) return planetImageMap[normalizedId];
+          
+          const branch = planetBranchMap[normalizedId] || parsePlanetId(normalizedId)?.branch;
+          if (branch && branchColorInfo[branch]) {
+            return branchColorInfo[branch].defaultImage;
+          }
+          
+          if (planetNum && planetNum >= 1 && planetNum <= 10) {
+            return planetNum;
+          }
+          
+          return 1;
+        }
+
+        function calculatePositions() {
+          // 1. & 2. Định nghĩa biến cho chiều rộng và chiều cao màn hình
+          const screenHeight = window.innerHeight;
+          const screenWidth = window.innerWidth;
+
+          // 3. Định nghĩa chiều cao cho khu vực message box
+          // messagebox = 1/5 chiều cao màn hình + 10px
+          const messageBoxHeight = (screenHeight / 10) + 10;
+          const currentPlanet = messageBoxHeight;
+
+          // 4. Cập nhật vị trí của hành tinh hiện tại (planet.current)
+          // Vị trí bottom của planet.current bằng với chiều cao của message box
+          document.documentElement.style.setProperty('--messageBoxHeight', `${messageBoxHeight}px`);
+          document.documentElement.style.setProperty('--screenHeight', `${screenHeight}`);
+          document.documentElement.style.setProperty('--screenWidth', `${screenWidth}`);
+          document.documentElement.style.setProperty('--currentPlanet', `${currentPlanet}px`);
+          document.documentElement.style.setProperty('--planet-current-bottom', `${messageBoxHeight}px`);
+        }
+
+        function updatePlanetImages() {
+          const baseUrl = 'https://raw.githubusercontent.com/huyvu15/teambuilding-design-game-planet/main/frontend/image/img-light/';
+          const planetImageUrls = {
+            '1': baseUrl + '1.png',
+            '2': baseUrl + '2.png',
+            '3': baseUrl + '3.png',
+            '4': baseUrl + '4.png',
+            '5': baseUrl + '5.png',
+            '6': baseUrl + '6.png',
+            '7': baseUrl + '7.png',
+            '8': baseUrl + '8.png',
+            '9': baseUrl + '9.png',
+            '10': baseUrl + '10.png'
+          };
+          
+          planets.forEach(function(p) {
+            const planetNum = Number(p.dataset.planet);
+            const imgEl = p.querySelector('.img');
+            
+            if (imgEl && planetImageUrls[planetNum]) {
+              imgEl.src = planetImageUrls[planetNum];
+              imgEl.alt = 'Hành tinh ' + planetNum;
+            }
+          });
+        }
+
+        function updateMessageBoxVisibility() {
+          if (!messageBox) return;
+          const showInput = !myTeamCorrect ;
+          if (inputContainer) {
+            inputContainer.classList.toggle('hidden', !showInput);
+            inputContainer.setAttribute('aria-hidden', showInput ? 'false' : 'true');
+          }
+          if (rankingPanel) {
+            rankingPanel.classList.toggle('hidden', showInput);
+            rankingPanel.setAttribute('aria-hidden', showInput ? 'true' : 'false');
+          }
+        }
+
+        function clearTypingAnimation() {
+          typingTimeouts.forEach((timeoutId) => clearTimeout(timeoutId));
+          typingTimeouts = [];
+        }
+
+        function typeText(text, element, speed = 18) {
+          if (!element) return;
+          const content = String(text || '');
+          clearTypingAnimation();
+          element.textContent = '';
+          if (!content) {
+            return;
+          }
+          const chars = Array.from(content);
+          chars.forEach((char, index) => {
+            const timeoutId = setTimeout(() => {
+              element.textContent += char;
+            }, index * speed);
+            typingTimeouts.push(timeoutId);
+          });
+        }
+
+        function showInfoPopup(title = '', message = '') {
+          if (!infoPopup) return;
+          if (popupTitle) {
+            popupTitle.textContent = String(title || '').toUpperCase();
+          }
+          if (popupText) {
+            typeText(message, popupText);
+          }
+          infoPopup.classList.remove('hidden');
+          infoPopup.setAttribute('aria-hidden', 'false');
+        }
+
+        function hideInfoPopup() {
+          if (!infoPopup) return;
+          clearTypingAnimation();
+          if (popupText) {
+            popupText.textContent = '';
+          }
+          infoPopup.classList.add('hidden');
+          infoPopup.setAttribute('aria-hidden', 'true');
+        }
+
+        function formatRankValue(value) {
+          if (value === null || value === undefined) return '--';
+          const num = Number(value);
+          return Number.isNaN(num) ? '--' : String(num);
+        }
+
+        function updateRankingPanelContent(ranking) {
+          if (!rankingPanel) return;
+          if (rankingGuessValue) {
+            rankingGuessValue.textContent = formatRankValue(ranking?.guess_rank);
+          }
+          if (rankingMapValue) {
+            rankingMapValue.textContent = formatRankValue(ranking?.map_rank);
+          }
+        }
+
+        function showRankingPanel(ranking) {
+          updateRankingPanelContent(ranking);
+          updateMessageBoxVisibility();
+        }
+
+        function updatePlanetDisplay() {
+          const myPlanetIdNormalized = normalizePlanetId(myPlanetIdFromQuery);
+          planets.forEach(function(p) {
+            const planetNum = Number(p.dataset.planet);
+            const rawPlanetId = getPlanetIdByNum(planetNum);
+            const planetId = rawPlanetId ? normalizePlanetId(rawPlanetId) : null;
+            const parsedInfo = parsePlanetId(planetId);
+            const planetBranch = parsedInfo?.branch ?? null;
+            
+            // Hành tinh chính: có planet_id trùng với URL
+            const isCurrent = planetNum === 1;
+            
+            // Hành tinh đã sáng: 
+            // - Hành tinh chính: sáng khi đã đoán đúng
+            // - Hành tinh khác: sáng khi có planet_id trong stateData VÀ planet_id khác với hành tinh gốc
+            //   (tránh trường hợp hành tinh khác có cùng planet_id với hành tinh gốc)
+            let isLit = false;
+            if (isCurrent) {
+              isLit = myTeamCorrect;
+            } else {
+              // Chỉ sáng hành tinh khác nếu planet_id của nó khác với hành tinh gốc
+              if (planetId && planetId !== myPlanetIdNormalized && stateData.includes(planetId)) {
+                isLit = true;
+              }
+            }
+            const shouldShowLit = isLit;
+            
+            // Có thể chọn: đã đoán đúng, hành tinh đã sáng, không phải hành tinh chính, stage là map, và ở branch khác
+            const isOtherBranch = planetBranch && planetBranch !== myBranch;
+            const canSelect = myTeamCorrect && isLit && !isCurrent && currentStage === 'map' && isOtherBranch;
+
+            p.classList.toggle('current', isCurrent);
+            if (isCurrent && myTeamCorrect) {
+                p.classList.add('glowing');
+                } else {
+                p.classList.remove('glowing');
+                }
+            p.classList.toggle('selectable', canSelect);
+            
+            // Selected: hành tinh đang được chọn
+            if (selectedPlanetId === planetId && !isCurrent) {
+              p.classList.add('selected');
+            } else {
+              p.classList.remove('selected');
+            }
+
+            // Update cursor
+            if (canSelect) {
+              p.style.cursor = 'pointer';
+              p.style.pointerEvents = 'auto';
+            } else if (!isCurrent) {
+              p.style.cursor = 'pointer';
+              p.style.pointerEvents = 'auto';
+            } else {
+              p.style.cursor = 'default';
+            }
+
+            // Hiển thị thông điệp cho hành tinh khác nhánh đã đoán đúng
+            let tooltipEl = p.querySelector('.planet-tooltip');
+            if (!tooltipEl) {
+              tooltipEl = document.createElement('div');
+              tooltipEl.className = 'planet-tooltip';
+              tooltipEl.innerHTML = '<img class="planet-tooltip__bg" src="https://raw.githubusercontent.com/huyvu15/teambuilding-design-game-planet/main/frontend/image/Image/Tooltip.png" alt="Tooltip" /><span class="planet-tooltip__text"></span>';
+              p.appendChild(tooltipEl);
+            }
+
+            const tooltipTextEl = tooltipEl.querySelector('.planet-tooltip__text');
+
+            let messageText = '';
+            if (isCurrent && isLit && myPlanetMessage) {
+              messageText = myPlanetMessage;
+            } else if (isOtherBranch && isLit && otherBranchWords.has(planetId)) {
+              messageText = otherBranchWords.get(planetId) || '';
+            }
+
+            if (messageText && tooltipTextEl) {
+              tooltipTextEl.textContent = messageText;
+              tooltipEl.classList.add('show');
+              p.classList.add('show-message');
+              p.classList.add('glowing2');
+            } 
+          });
+        }
+
+        // Load team info - chỉ dựa vào planet_id từ URL
+        function loadTeam() {
+          if (!myPlanetIdFromQuery) {
+            showInfoPopup('Thiếu dữ liệu', 'Thiếu planet_id trong URL.');
+            return;
+          }
+          
+          const parsed = parsePlanetId(myPlanetIdFromQuery);
+          if (parsed && parsed.branch) {
+            myBranch = parsed.branch;
+          }
+          
+          updatePlanetImages();
+          updatePlanetDisplay();
+          updateMessageBoxVisibility();
+        }
+        
+        // Send guess - Gửi đáp án (API: POST /api/answer { planet_id, answer })
+        async function sendGuess() {
+          const key = keywordInput.value.trim();
+          if (!key) return;
+          sendBtn.disabled = true;
+          let polledAfterSuccess = false;
+          try {
+            if (!myPlanetIdFromQuery) {
+              throw new Error('Thiếu planet_id. Vui lòng thêm ?planet_id=... vào URL.');
+            }
+            const res = await fetchAPI('/api/answer', {
+              method: 'POST',
+              body: JSON.stringify({ planet_id: myPlanetIdFromQuery, answer: key })
+            });
+            const data = await res.json();
+            if (res.status >= 400) throw new Error(data.message || 'Lỗi');
+            
+            // Theo api.md: status: success | fail | not done | expire
+            const status = String(data.status || '').toLowerCase();
+            if (status === 'success') {
+              myTeamCorrect = true;
+              console.log('Đúng từ khóa');
+              if (data.ranking) {
+                console.log('Thứ hạng:', data.ranking.rank, 'Branch:', data.ranking.branch);
+              }
+              // Cập nhật stateData ngay
+              if (myPlanetIdFromQuery && !stateData.includes(normalizePlanetId(myPlanetIdFromQuery))) {
+                stateData.push(normalizePlanetId(myPlanetIdFromQuery));
+                updatePlanetDisplay();
+              }
+              updateMessageBoxVisibility();
+              await pollState();
+              polledAfterSuccess = true;
+              if (latestRanking) {
+                showRankingPanel(latestRanking);
+              }
+            } else if (status === 'fail') {
+              showInfoPopup('Sai rồi', 'Sai! Vui lòng thử lại.');
+            } else if (status === 'expire') {
+              showInfoPopup('Hết lượt', 'Hết lượt đoán.');
+            } else if (status === 'not done') { 
+              showInfoPopup('Chưa hoàn thành', 'Quiz chưa hoàn thành. Hãy làm xong quiz trước khi đoán.');
+            }
+          } catch (e) {
+            showInfoPopup('Lỗi', e.message || 'Lỗi gửi dự đoán');
+            console.error('Lỗi sendGuess:', e);
+          } finally {
+            sendBtn.disabled = false;
+            keywordInput.value = '';
+            if (!polledAfterSuccess) {
+              pollState();
+            }
+          }
+        }
+
+        // Modal helpers
+        function openChooseModal() {
+          if (!chooseModal) return;
+          chooseModal.classList.add('show');
+          chooseModal.setAttribute('aria-hidden', 'false');
+        }
+        function showRulesPopup() {
+          if (!rulesPopup) return;
+          rulesPopup.classList.add('show');
+          rulesPopup.setAttribute('aria-hidden', 'false');
+        }
+
+        function hideRulesPopup() {
+          if (!rulesPopup) return;
+          rulesPopup.classList.remove('show');
+          rulesPopup.setAttribute('aria-hidden', 'true');
+        }
+
+        function closeChooseModal() {
+          if (!chooseModal) return;
+          chooseModal.classList.remove('show');
+          chooseModal.setAttribute('aria-hidden', 'true');
+        }
+
+        function hideWinPopup() {
+          if (!winPopup) return;
+          winPopup.classList.remove('show');
+          winPopup.setAttribute('aria-hidden', 'true');
+        }
+
+        function showWinPopup(duration = 3000) {
+          if (!winPopup) return;
+          clearTimeout(winPopupTimeout);
+          winPopup.classList.add('show');
+          winPopup.setAttribute('aria-hidden', 'false');
+          winPopupTimeout = setTimeout(hideWinPopup, duration);
+        }
+
+        // Biến tạm giữ mục tiêu cần ghép khi mở popup
+        let pendingTargetInfo = null;
+
+        // Modal actions
+        if (chooseYesBtn) {
+          chooseYesBtn.addEventListener('click', function() {
+            // Nếu đã chọn mục tiêu, thực hiện ghép
+            const target = pendingTargetInfo;
+            pendingTargetInfo = null;
+            closeChooseModal();
+            if (target) {
+              selectedPlanetId = null;
+              updatePlanetDisplay();
+              doMatch(target);
+            }
+          });
+        }
+        if (chooseNoBtn) {
+          chooseNoBtn.addEventListener('click', function() {
+            pendingTargetInfo = null;
+            closeChooseModal();
+          });
+        }
+        
+
+        // Match with selected planet (API: POST /api/match { main_planet, target_planet })
+        async function doMatch(targetInfo) {
+          try {
+            const myPid = myPlanetIdFromQuery;
+            const targetPid = targetInfo.planet_id;
+            
+            if (!myPid || !targetPid) {
+              throw new Error('Không xác định được planet_id');
+            }
+            
+            const res = await fetchAPI('/api/match', {
+              method: 'POST',
+              body: JSON.stringify({
+                main_planet: myPid,
+                target_planet: targetPid
+              })
+            });
+            const data = await res.json();
+            if (res.status >= 400) throw new Error(data.message || 'Lỗi');
+            
+            // Theo api.md: status: success | false | not done | expire
+            const status = String(data.status || '').toLowerCase();
+            if (status === 'success') {
+              showWinPopup();
+              showInfoPopup('Thành công', 'Ghép cặp thành công!');
+              if (data.complete === 'done') {
+                setTimeout(() => {
+              location.href = 'leaderboard.html';
+                }, 20000);
+            } else {
+                pollState();
+              }
+            } else if (status === 'false') {
+              showInfoPopup('Sai rồi', 'Ghép sai. Vui lòng thử lại.');
+            } else if (status === 'not done') {
+              showInfoPopup('Chưa sẵn sàng', 'Hành tinh đích chưa đoán xong.');
+            } else if (status === 'expire') {
+              showInfoPopup('Hết lượt', 'Quá 10 lượt thử.');
+            }
+          } catch (e) {
+            showInfoPopup('Lỗi', e.message || 'Lỗi ghép cặp');
+            console.error('Lỗi doMatch:', e);
+          } finally {
+            pollState();
+          }
+        }
+
+        // Poll state - dùng /api/available-planets để lấy trạng thái và danh sách hành tinh
+        async function pollState() {
+          try {
+            if (!myPlanetIdFromQuery) {
+              updatePlanetDisplay();
+              return;
+            }
+
+            // Gọi /api/available-planets để lấy stage, ranking, và danh sách planets
+            try {
+              const res = await fetchAPI('/api/available-planets', {
+                method: 'POST',
+                body: JSON.stringify({ planet_id: myPlanetIdFromQuery.trim() })
+              });
+
+              if (!res.ok) {
+                if (res.status === 404) {
+                  // Endpoint chưa được implement -> bỏ qua
+                  updatePlanetDisplay();
+                  return;
+                }
+                
+                // Xử lý lỗi 500 (server error) - không spam console
+                if (res.status === 500) {
+                  // Lỗi server (database connection, etc.) - bỏ qua và dùng local state
+                  // Chỉ log một lần để debug
+                  if (!window._hasLogged500Error) {
+                    console.warn('Server đang gặp lỗi (500). Sử dụng local state. Lỗi sẽ được bỏ qua.');
+                    window._hasLogged500Error = true;
+                  }
+                  updatePlanetDisplay();
+                  return;
+                }
+                
+                updatePlanetDisplay();
+                return;
+              }
+
+              const data = await res.json();
+              
+              if (data.status === 'success') {
+                // Cập nhật stage hiện tại
+                currentStage = data.stage || 'guess';
+                
+                
+                // Cập nhật danh sách planets đã sáng
+                availablePlanets = {
+                  sameBranch: Array.isArray(data.sameBranch) ? data.sameBranch : [],
+                  otherBranch: Array.isArray(data.otherBranch) ? data.otherBranch : []
+                };
+
+                // Lưu thông điệp của hành tinh khác nhánh
+                otherBranchWords = new Map();
+                availablePlanets.otherBranch.forEach(item => {
+                  if (!item) return;
+                  if (typeof item === 'string') {
+                    otherBranchWords.set(normalizePlanetId(item), '');
+                    return;
+                  }
+                  const pid = item.planet_id || item.id;
+                  if (!pid) return;
+                  const text = item.word || item.message || item.hint || '';
+                  const normalizedPid = normalizePlanetId(pid);
+                  otherBranchWords.set(normalizedPid, text);
+                  if (normalizedPid === normalizePlanetId(myPlanetIdFromQuery) && text) {
+                    myPlanetMessage = text;
+                  }
+                });
+                
+                // Tổng hợp tất cả planet_id đã sáng để hiển thị
+                const allLitPlanets = [
+                  ...availablePlanets.sameBranch,
+                  ...availablePlanets.otherBranch.map(p => typeof p === 'string' ? p : p.planet_id)
+                ];
+                stateData = allLitPlanets
+                  .map(id => normalizePlanetId(id))
+                  .filter(Boolean);
+                stateData = Array.from(new Set(stateData));
+                
+                // Debug: Log để kiểm tra
+                console.log('Planets đã sáng:', {
+                  sameBranch: availablePlanets.sameBranch,
+                  otherBranch: availablePlanets.otherBranch,
+                  allLitPlanets: allLitPlanets,
+                  stage: currentStage,
+                  myPlanetId: myPlanetIdFromQuery
+                });
+                
+                // Cập nhật myTeamCorrect dựa trên stage
+                if (currentStage !== 'guess') {
+                  myTeamCorrect = true;
+                }
+
+                if (currentStage === 'map' && myTeamCorrect && !nextStepShown) {
+                  showInfoPopup('Bước tiếp theo', 'Đội thi hãy tiếp tục ghép hành tinh hiện tại với các hành tinh ở nhánh còn lại để ghép khúc.');
+                  nextStepShown = true;
+                }
+                
+                // Parse branch từ planet_id nếu cần
+                if (data.planet_id && myPlanetIdFromQuery) {
+                  const parsed = parsePlanetId(data.planet_id);
+                  if (parsed && parsed.branch && parsed.branch !== myBranch) {
+                    myBranch = parsed.branch;
+                  }
+                }
+                
+                // Hiển thị ranking nếu có
+                if (data.ranking) {
+                  latestRanking = data.ranking;
+                  if (data.ranking.guess_rank) {
+                    console.log('Thứ hạng đoán từ:', data.ranking.guess_rank);
+                  }
+                  if (data.ranking.map_rank) {
+                    console.log('Thứ hạng ghép cặp:', data.ranking.map_rank);
+                  }
+                }
+                updateRankingPanelContent(latestRanking);
+              }
+            } catch (apiError) {
+              // Xử lý các lỗi network/CORS - không spam console
+              if (apiError.message) {
+                const msg = apiError.message.toLowerCase();
+                if (msg.includes('404') || msg.includes('cors') || msg.includes('failed to fetch')) {
+                  // Không log để tránh spam
+                } else if (msg.includes('500') || msg.includes('internal server error')) {
+                  // Lỗi 500 - chỉ log một lần
+                  if (!window._hasLogged500Error) {
+                    console.warn('Lỗi server khi gọi /api/available-planets. Sử dụng local state.');
+                    window._hasLogged500Error = true;
+                  }
+                } else {
+                  // Các lỗi khác - log để debug
+                  console.warn('Lỗi khi gọi /api/available-planets:', apiError.message.substring(0, 100));
+                }
+              }
+            }
+
+            // Thêm planet_id của mình vào danh sách nếu đã đoán đúng
+            if (myTeamCorrect && myPlanetIdFromQuery && !stateData.includes(normalizePlanetId(myPlanetIdFromQuery))) {
+              stateData.push(normalizePlanetId(myPlanetIdFromQuery));
+            }
+            
+            updatePlanetDisplay();
+            updateMessageBoxVisibility();
+          } catch (e) {
+            console.error('Lỗi pollState:', e);
+            updatePlanetDisplay();
+            updateMessageBoxVisibility();
+          }
+        }
+
+        closePopupBtn?.addEventListener('click', hideInfoPopup);
+        infoPopup?.addEventListener('click', (event) => {
+          if (event.target === infoPopup) {
+            hideInfoPopup();
+          }
+        });
+        window.addEventListener('keydown', (event) => {
+          if (event.key === 'Escape') {
+            hideInfoPopup();
+          }
+        });
+
+        socket.on('planet_mapped', (data) => {
+          console.log('Sự kiện [planet_mapped] đã nhận:', data);
+          if (data && data.planet_id) {
+            // Gọi pollState() để cập nhật lại toàn bộ trạng thái từ server.
+            // Cách này đảm bảo giao diện luôn đồng bộ một cách an toàn.
+            pollState();
+          }
+        });// Planet click handler
+        planets.forEach(function(p) {
+          p.addEventListener('click', function() {
+            const planetIdRaw = getPlanetIdByNum(Number(p.dataset.planet));
+            const planetId = planetIdRaw ? normalizePlanetId(planetIdRaw) : null;
+            if (!planetId) return; // Không có planet_id, bỏ qua
+            
+            // Không cho chọn hành tinh của mình
+            if (planetId === normalizePlanetId(myPlanetIdFromQuery)) return;
+            
+            // Hiển thị outline khi click
+            selectedPlanetId = planetId;
+            updatePlanetDisplay();
+            
+            // Nếu stage là guess, chưa thể ghép cặp
+            if (currentStage === 'guess') {
+              return;
+            }
+            
+            // Stage là map: chỉ cho phép ghép với hành tinh ở branch khác đã đoán đúng
+            if (currentStage === 'map') {
+              const parsedInfo = parsePlanetId(planetId);
+              const planetBranch = parsedInfo?.branch ?? null;
+              
+              // Kiểm tra cùng branch
+              if (planetBranch === myBranch) {
+                showInfoPopup('Sai nhánh', 'Hành tinh này chỉ được ghép với hành tinh ở nhánh đối diện (nhánh ' + (myBranch === 1 ? '2' : '1') + ').');
+                return;
+              }
+              
+              // Kiểm tra có trong danh sách otherBranch không
+              const canMatch = availablePlanets.otherBranch.some(p => {
+                const pid = typeof p === 'string' ? p : p.planet_id;
+                return pid === planetId;
+              });
+              
+              if (!canMatch) {
+                showInfoPopup('Sai nhánh', 'Hành tinh này chỉ được ghép với hành tinh ở nhánh đối diện (nhánh ' + (myBranch === 1 ? '2' : '1') + ') đã đoán đúng.');
+                return;
+              }
+              
+              // Mở popup xác nhận
+              pendingTargetInfo = { planet_id: planetIdRaw };
+              openChooseModal();
+            }
+          });
+        });
+
+        // Initialize
+        calculatePositions();
+        loadTeam();
+        pollState().then(() => updatePlanetDisplay());
+        updateMessageBoxVisibility();
+        // setInterval(pollState, 10000);
+        sendBtn.addEventListener('click', sendGuess);
+        keywordInput.addEventListener('keydown', (e) => { if (e.key === 'Enter') sendGuess(); });
+        window.addEventListener('resize', calculatePositions);
+        chooseModal?.addEventListener('click', (event) => {
+          if (event.target === chooseModal) {
+            pendingTargetInfo = null;
+            closeChooseModal();
+          }
+        });
+        winPopup?.addEventListener('click', hideWinPopup);
+        startGameBtn?.addEventListener('click', hideRulesPopup);
+        viewRulesBtn?.addEventListener('click', showRulesPopup);
+        
+        // Hàm để kết thúc intro và hiển thị game
+        function endIntro() {
+          if (!introContainer.classList.contains('fade-out')) {
+            // 1. Làm mờ video container
+            introContainer.classList.add('fade-out');
+
+            // 2. Hiển thị nội dung game
+            rulesPopupForIntro.classList.remove('content-hidden');
+            gameScreenForIntro.classList.remove('content-hidden');
+            
+            // 3. Hiển thị luật chơi sau khi nội dung đã hiện ra
+            requestAnimationFrame(showRulesPopup);
+          }
+        }
+
+        // Hàm cập nhật icon âm thanh
+        function updateSoundIcon() {
+            const isMuted = introVideo.muted;
+            if (soundOnIcon) soundOnIcon.style.display = isMuted ? 'none' : 'block';
+            if (soundOffIcon) soundOffIcon.style.display = isMuted ? 'block' : 'none';
+        }
+
+        // Xử lý sau khi video intro kết thúc
+        introVideo.addEventListener('ended', endIntro);
+        
+        // Xử lý khi nhấn nút bật/tắt âm thanh
+        soundToggleBtn?.addEventListener('click', () => {
+            introVideo.muted = !introVideo.muted;
+            updateSoundIcon();
+        });
+
+        // Cập nhật icon lúc ban đầu
+        updateSoundIcon();
+
+      })();
+     
+    </script>
+     <script>
+      const canvas = document.getElementById('star-canvas');
+      const ctx = canvas.getContext('2d');
+
+      // Thiết lập kích thước canvas
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+
+      // Mảng chứa các sao
+      const stars = [];
+      const numStars = 300;
+
+      // Mouse position
+      let mouseX = canvas.width / 2;
+      let mouseY = canvas.height / 2;
+
+      // Class Star
+      class Star {
+          constructor() {
+              this.reset();
+          }
+
+          reset() {
+              // Vị trí ban đầu ngẫu nhiên trong không gian 3D
+              this.x = (Math.random() - 0.5) * canvas.width * 2;
+              this.y = (Math.random() - 0.5) * canvas.height * 2;
+              this.z = Math.random() * 2000 + 500; // Độ sâu từ 500 đến 2500
+
+              // Màu sắc đa dạng
+              const colors = [
+                  { r: 255, g: 255, b: 255 }, // Trắng
+                  { r: 200, g: 216, b: 230 }, // Xanh nhạt
+                  { r: 255, g: 250, b: 205 }, // Vàng nhạt
+                  { r: 221, g: 160, b: 221 }, // Tím nhạt
+                  { r: 150, g: 206, b: 250 }, // Xanh da trời
+              ];
+              this.color = colors[Math.floor(Math.random() * colors.length)];
+
+              // Tốc độ bay
+              this.speed = Math.random() * 0.5 + 0.3;
+              
+              // Độ lấp lánh
+              this.twinkleSpeed = Math.random() * 0.02 + 0.01;
+              this.twinkleOffset = Math.random() * Math.PI * 2;
+          }
+
+          update() {
+              // Di chuyển sao về phía trước (giảm z)
+              this.z -= this.speed * 3;
+
+              // Nếu sao đã đến quá gần, reset về xa
+              if (this.z <= 1) {
+                  this.reset();
+                  this.z = 2500;
+              }
+          }
+
+          draw() {
+              // Tính toán vị trí 2D từ vị trí 3D (phối cảnh)
+              const scale = 1000 / this.z;
+              const x2d = this.x * scale + canvas.width / 2;
+              const y2d = this.y * scale + canvas.height / 2;
+
+              // Chỉ vẽ nếu sao nằm trong màn hình
+              if (x2d < 0 || x2d > canvas.width || y2d < 0 || y2d > canvas.height) {
+                  return;
+              }
+
+              // Kích thước sao phụ thuộc vào độ sâu (gần to, xa nhỏ)
+              const size = (1 - this.z / 2500) * 3 + 0.5;
+
+              // Độ sáng phụ thuộc vào độ sâu (gần sáng, xa tối)
+              const brightness = 1 - this.z / 2500;
+              
+              // Hiệu ứng lấp lánh
+              const twinkle = Math.sin(Date.now() * this.twinkleSpeed + this.twinkleOffset) * 0.3 + 0.7;
+
+              // Vẽ ánh sáng phát ra (glow)
+              if (size > 1.5) {
+                  const glowGradient = ctx.createRadialGradient(x2d, y2d, 0, x2d, y2d, size * 3);
+                  glowGradient.addColorStop(0, `rgba(${this.color.r}, ${this.color.g}, ${this.color.b}, ${brightness * twinkle * 0.5})`);
+                  glowGradient.addColorStop(1, 'rgba(255, 255, 255, 0)');
+                  ctx.fillStyle = glowGradient;
+                  ctx.fillRect(x2d - size * 3, y2d - size * 3, size * 6, size * 6);
+              }
+
+              // Vẽ sao chính
+              ctx.fillStyle = `rgba(${this.color.r}, ${this.color.g}, ${this.color.b}, ${brightness * twinkle})`;
+              ctx.beginPath();
+              ctx.arc(x2d, y2d, size, 0, Math.PI * 2);
+              ctx.fill();
+
+              // Vẽ đuôi sao cho các sao gần
+              if (this.z < 800) {
+                  const prevZ = this.z + this.speed * 5;
+                  const prevScale = 1000 / prevZ;
+                  const prevX = this.x * prevScale + canvas.width / 2;
+                  const prevY = this.y * prevScale + canvas.height / 2;
+
+                  const gradient = ctx.createLinearGradient(x2d, y2d, prevX, prevY);
+                  gradient.addColorStop(0, `rgba(${this.color.r}, ${this.color.g}, ${this.color.b}, ${brightness * 0.8})`);
+                  gradient.addColorStop(1, 'rgba(255, 255, 255, 0)');
+
+                  ctx.strokeStyle = gradient;
+                  ctx.lineWidth = size * 0.8;
+                  ctx.beginPath();
+                  ctx.moveTo(x2d, y2d);
+                  ctx.lineTo(prevX, prevY);
+                  ctx.stroke();
+              }
+          }
+      }
+
+      // Khởi tạo các sao
+      for (let i = 0; i < numStars; i++) {
+          stars.push(new Star());
+      }
+
+      // Animation loop
+      function animate() {
+          ctx.clearRect(0, 0, canvas.width, canvas.height);
+          stars.forEach(star => {
+              star.update();
+              star.draw();
+          });
+          requestAnimationFrame(animate);
+      }
+      window.addEventListener('resize', () => {
+          canvas.width = window.innerWidth;
+          canvas.height = window.innerHeight;
+      });
+      animate();
+  </script>

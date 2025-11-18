@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>Galaxy Symphony - Giới thiệu</title>
+  <link href="https://fonts.googleapis.com/css2?family=Potta+One&amp;display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="intro.css" />
+</head>
+<body>
+  <div class="game-screen">
+    <video class="bg-video"
+      src="https://raw.githubusercontent.com/huyvu15/teambuilding-design-game-planet/main/frontend/image/Video/Comp2.mp4"
+      autoplay muted loop playsinline></video>
+
+    <main class="stage" aria-label="Giới thiệu các hành tinh">
+      <img class="galaxy-title"
+        src="https://raw.githubusercontent.com/huyvu15/teambuilding-design-game-planet/main/frontend/image/Image/Galaxy%20Symphony.png"
+        alt="Galaxy Symphony" />
+
+      <ul class="planets">
+        <li class="planet" data-team="Mercury" data-planet="1" data-info="Nhanh nhẹn, linh hoạt và luôn dẫn đầu ý tưởng.">
+          <img class="img" src="https://raw.githubusercontent.com/huyvu15/teambuilding-design-game-planet/main/frontend/image/Planet/1.png" alt="Mercury" />
+        </li>
+        <li class="planet" data-team="Venus" data-planet="2" data-info="Sáng tạo và đầy cảm xúc, mang vẻ đẹp hòa hợp.">
+          <img class="img" src="https://raw.githubusercontent.com/huyvu15/teambuilding-design-game-planet/main/frontend/image/Planet/2.png" alt="Venus" />
+        </li>
+        <li class="planet" data-team="Earth" data-planet="3" data-info="Đoàn kết, sẻ chia và bền bỉ vượt thử thách.">
+          <img class="img" src="https://raw.githubusercontent.com/huyvu15/teambuilding-design-game-planet/main/frontend/image/Planet/3.png" alt="Earth" />
+        </li>
+        <li class="planet" data-team="Mars" data-planet="4" data-info="Quyết đoán, mạnh mẽ, sẵn sàng bùng nổ năng lượng.">
+          <img class="img" src="https://raw.githubusercontent.com/huyvu15/teambuilding-design-game-planet/main/frontend/image/Planet/4.png" alt="Mars" />
+        </li>
+        <li class="planet" data-team="Jupiter" data-planet="5" data-info="Lãnh đạo bẩm sinh, tầm nhìn lớn và dẫn dắt đội nhóm.">
+          <img class="img" src="https://raw.githubusercontent.com/huyvu15/teambuilding-design-game-planet/main/frontend/image/Planet/5.png" alt="Jupiter" />
+        </li>
+        <li class="planet" data-team="Saturn" data-planet="6" data-info="Kỷ luật, trật tự, luôn kiên định với mục tiêu.">
+          <img class="img" src="https://raw.githubusercontent.com/huyvu15/teambuilding-design-game-planet/main/frontend/image/Planet/6.png" alt="Saturn" />
+        </li>
+        <li class="planet" data-team="Uranus" data-planet="7" data-info="Phá cách, sáng tạo và dám khác biệt.">
+          <img class="img" src="https://raw.githubusercontent.com/huyvu15/teambuilding-design-game-planet/main/frontend/image/Planet/7.png" alt="Uranus" />
+        </li>
+        <li class="planet" data-team="Neptune" data-planet="8" data-info="Trầm lắng, sâu sắc và giàu cảm xúc.">
+          <img class="img" src="https://raw.githubusercontent.com/huyvu15/teambuilding-design-game-planet/main/frontend/image/Planet/8.png" alt="Neptune" />
+        </li>
+        <li class="planet" data-team="Pluto" data-planet="9" data-info="Bí ẩn, kiên trì và không ngừng khám phá.">
+          <img class="img" src="https://raw.githubusercontent.com/huyvu15/teambuilding-design-game-planet/main/frontend/image/Planet/9.png" alt="Pluto" />
+        </li>
+        <li class="planet" data-team="Sun" data-planet="10" data-info="Nguồn sáng trung tâm, tỏa năng lượng cho toàn vũ trụ!">
+          <img class="img" src="https://raw.githubusercontent.com/huyvu15/teambuilding-design-game-planet/main/frontend/image/Planet/10.png" alt="Sun" />
+        </li>
+      </ul>
+    </main>
+
+    <!-- Popup giới thiệu luật chơi -->
+    <div id="rulesPopup" class="rules-popup">
+      <div class="rules-popup-content">
+        <img class="rules-logo" 
+          src="https://raw.githubusercontent.com/huyvu15/teambuilding-design-game-planet/main/frontend/image/Image/logo.png"
+          alt="Logo" />
+        <div class="rules-popup-body">
+          <img class="rules-popup-bg" 
+            src="https://raw.githubusercontent.com/huyvu15/teambuilding-design-game-planet/main/frontend/image/Image/PopUp.png"
+            alt="Popup Background" />
+          <div class="rules-content">
+            <h2 class="rules-title">LUẬT CHƠI</h2>
+            <div class="rules-text">
+              <p>Nhiệm vụ của mỗi đội là đi tìm thông điệp của đội mình. Cảnh sát phó sẽ âm thầm bảo vệ và giúp đỡ cảnh sát trưởng. Tội phạm phải giết cảnh sát trưởng.</p>
+            </div>
+            <button class="rules-start-btn" id="startGameBtn">
+              <img src="https://raw.githubusercontent.com/huyvu15/teambuilding-design-game-planet/main/frontend/image/Image/Button-Start.png" 
+                alt="Bắt đầu" />
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div id="infoPopup" class="popup hidden">
+      <div class="popup-content">
+        <button class="close-btn" id="closePopup">&times;</button>
+        <h2 id="popupTitle">Team Name</h2>
+        <p id="popupText" class="typing"></p>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const planets = document.querySelectorAll('.planet');
+    const popup = document.getElementById('infoPopup');
+    const popupTitle = document.getElementById('popupTitle');
+    const popupText = document.getElementById('popupText');
+    const closeBtn = document.getElementById('closePopup');
+    const rulesPopup = document.getElementById('rulesPopup');
+    const startGameBtn = document.getElementById('startGameBtn');
+
+    // Hiển thị popup luật chơi khi trang load
+    window.addEventListener('load', () => {
+      rulesPopup.classList.add('show');
+    });
+
+    // Xử lý nút Bắt đầu
+    startGameBtn.addEventListener('click', () => {
+      rulesPopup.classList.remove('show');
+    });
+
+    function typeText(text, element, speed = 35) {
+      element.textContent = '';
+      let i = 0;
+      const interval = setInterval(() => {
+        element.textContent += text.charAt(i);
+        i++;
+        if (i >= text.length) clearInterval(interval);
+      }, speed);
+    }
+
+    planets.forEach(p => {
+      p.addEventListener('click', () => {
+        const team = p.dataset.team;
+        const info = p.dataset.info;
+        popupTitle.textContent = team.toUpperCase();
+        typeText(info, popupText);
+        popup.classList.remove('hidden');
+      });
+    });
+
+    closeBtn.addEventListener('click', () => popup.classList.add('hidden'));
+    popup.addEventListener('click', (e) => {
+      if (e.target === popup) popup.classList.add('hidden');
+    });
+  </script>
+</body>
+</html>

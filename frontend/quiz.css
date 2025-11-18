@@ -1,0 +1,352 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  min-height: 100vh;
+  overflow: hidden;
+  background: #000 url("https://raw.githubusercontent.com/huyvu15/teambuilding-design-game-planet/main/frontend/image/Background/123.png") center / cover no-repeat fixed;
+  font-family: 'Potta One', cursive, Arial, sans-serif;
+  color: #fff;
+  position: relative;
+}
+
+.quiz-background {
+  position: fixed;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 0;
+}
+
+.galaxy-container {
+  position: fixed;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  background: transparent;
+  z-index: 0;
+}
+
+.nebula-layer {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  opacity: 0.6;
+}
+
+.nebula {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(60px);
+  animation: nebulaPulse 8s ease-in-out infinite;
+}
+
+.nebula-1 { width: 400px; height: 400px; background: radial-gradient(circle, rgba(138, 43, 226, 0.4) 0%, transparent 70%); top: 20%; left: 15%; animation-delay: 0s; }
+.nebula-2 { width: 500px; height: 300px; background: radial-gradient(ellipse, rgba(65, 105, 225, 0.4) 0%, transparent 70%); top: 50%; right: 20%; animation-delay: 2s; }
+.nebula-3 { width: 350px; height: 350px; background: radial-gradient(circle, rgba(147, 51, 234, 0.3) 0%, transparent 70%); bottom: 15%; left: 40%; animation-delay: 4s; }
+.nebula-4 { width: 300px; height: 400px; background: radial-gradient(ellipse, rgba(30, 144, 255, 0.3) 0%, transparent 70%); top: 10%; right: 35%; animation-delay: 1s; }
+.nebula-5 { width: 450px; height: 250px; background: radial-gradient(ellipse, rgba(123, 31, 162, 0.35) 0%, transparent 70%); bottom: 30%; right: 10%; animation-delay: 3s; }
+
+@keyframes nebulaPulse {
+  0%, 100% { opacity: 0.4; transform: scale(1); }
+  50% { opacity: 0.7; transform: scale(1.1); }
+}
+
+#star-canvas {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.center-glow {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 800px;
+  height: 800px;
+  background: radial-gradient(circle, rgba(255, 255, 255, 0.03) 0%, transparent 60%);
+  pointer-events: none;
+}
+  
+.galaxy-title {
+  position: fixed;
+  left: 50%;
+  top: 15%;
+  transform: translateX(-50%);
+  max-width: min(80vw, 520px);
+  width: auto;
+  height: auto;
+  z-index: 1;
+  pointer-events: none;
+  filter: drop-shadow(0 16px 18px rgba(0,0,0,0.6));
+}
+
+.question-label {
+  position: fixed;
+  top: 20px;
+  left: 20px;
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 16px;
+  font-weight: 500;
+  z-index: 2;
+  pointer-events: none;
+}
+
+.planets {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  position: relative;
+  min-height: calc(100vh - 180px);
+  z-index: 1;
+  pointer-events: none;
+}
+
+.planet {
+  position: absolute;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: var(--size, 96px);
+  height: var(--size, 96px);
+  transform: scale(var(--scale, 1));
+  transition: transform 200ms ease;
+  pointer-events: none;
+}
+
+.planet .img {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+.planet[data-planet="2"] { top: 40vh; left: -17vw; --size: 134px; --scale: 2; }
+.planet[data-planet="3"] { top: 4vh; left: 22vw; --size: 51px; --scale: 0.95; }
+.planet[data-planet="4"] { top: 0vh; left: 39vw; --size: 50px; --scale: -1.07; }
+.planet[data-planet="5"] { top: 33vh; left: 91vw; --size: 85px; --scale: 3.85; }
+.planet[data-planet="6"] { top: 0vh; left: 0vw; --size: 68px; --scale: 0.9; }
+.planet[data-planet="7"] { top: 4vh; left: -35vw; --size: 184px; --scale: 0.95; transform: rotate(323deg); }
+.planet[data-planet="8"] { top: 23vh; left: 22vw; --size: 61px; --scale: 0.92; }
+.planet[data-planet="9"] { top: 13vh; left: 32vw; --size: 71px; --scale: 0.95; }
+.planet[data-planet="10"] { top: -304px; left: 49vw; --size: 500px; --scale: 0.98; }
+
+.quiz-popup {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  background: transparent;
+  z-index: 10;
+  padding: 20px;
+  padding-bottom: 90px;
+  opacity: 1;
+  transition: opacity 0.3s ease;
+  pointer-events: none;
+}
+
+.quiz-popup__content {
+  /* position: relative; */
+  /* width: 90%; */
+  max-width: min(92vw, 520px);
+  animation: slideUp 0.5s ease;
+  pointer-events: auto;
+}
+  
+.quiz-popup__bg {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+.quiz-popup__inner {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  padding: 8% 8% 12%;
+  gap: 8px;
+  color: #e0e6ff;
+  overflow: hidden;
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(100%);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.quiz-popup__title {
+  font-size: clamp(18px, 4vw, 24px);
+  font-weight: 700;
+  color: #e6ecff;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin: 0;
+  text-shadow: 0 0 10px #5ec8ff, 0 0 20px #5ec8ff;
+}
+
+.quiz-popup__question {
+  font-size: clamp(14px, 3vw, 18px);
+  color: #e6ecff;
+  text-align: center;
+  line-height: 1.6;
+  margin: 0;
+  padding: 0;
+  min-height: 60px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+}
+
+.quiz-popup__question.complete-message {
+  font-size: clamp(18px, 4vw, 24px);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  text-shadow: 0 0 10px #5ec8ff, 0 0 20px #5ec8ff;
+  line-height: 1.4;
+  margin-top: 20px;
+}
+
+.quiz-popup__input-container {
+  position: relative;
+  width: 87%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 56px;
+}
+
+.quiz-popup__input {
+  width: 100%;
+  padding: 12px 16px;
+  border: none;
+  border-radius: 8px;
+  outline: none;
+  background: rgba(20, 24, 40, 0.6);
+  color: #e6ecff;
+  font-weight: 600;
+  text-transform: uppercase;
+  font-family: 'Potta One', cursive, Arial, sans-serif;
+  font-size: 14px;
+  text-align: center;
+  transition: background 0.3s ease;
+}
+
+.quiz-popup__input:focus {
+  background: rgba(20, 24, 40, 0.8);
+}
+
+.quiz-popup__input::placeholder {
+  color: rgba(230, 236, 255, 0.5);
+  text-transform: none;
+}
+
+.quiz-popup__submit {
+  width: 100%;
+  max-width: 200px;
+  padding: 12px 24px;
+  border: none;
+  border-radius: 12px;
+  background: linear-gradient(180deg, #ffde8a 0%, #ff7f2f 100%);
+  border: 2px solid #ffb23a;
+  color: #4b2000;
+  font-family: 'Potta One', cursive, Arial, sans-serif;
+  font-weight: 900;
+  font-size: 20px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  cursor: pointer;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.25);
+  transition: all 0.2s ease;
+  margin-top: 4px;
+  display: block;
+  visibility: visible;
+  opacity: 1;
+  position: relative;
+  z-index: 10;
+}
+
+.quiz-popup__submit:hover:not(:disabled) {
+  transform: scale(1.05);
+  background: linear-gradient(180deg, #ffe299 0%, #ff9d4d 100%);
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
+}
+
+.quiz-popup__submit:active:not(:disabled) {
+  transform: scale(0.97);
+  background: linear-gradient(180deg, #ffce70 0%, #ff6a00 100%);
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.4);
+}
+
+.quiz-popup__submit:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.quiz-popup__result {
+  min-height: 24px;
+  font-size: 18px;
+  font-weight: 700;
+  text-align: center;
+  padding: 8px 12px;
+  border-radius: 8px;
+  transition: all 0.3s ease;
+  margin-top: -15px;
+}
+
+.quiz-popup__result.success {
+  color: #4ade80;
+  text-shadow: 0 0 10px #4ade80;
+}
+
+.quiz-popup__result .letter-display {
+  display: inline-block;
+  font-size: 32px;
+  font-weight: 900;
+  color: #ffe082;
+  text-shadow: 0 0 15px #ffe082, 0 0 30px #ffb23a;
+  margin: 0 8px;
+  padding: 10px 12px;
+  background: rgba(255, 224, 130, 0.1);
+  border: 2px solid rgba(255, 224, 130, 0.3);
+  border-radius: 8px;
+  /* animation: letterPulse 1s ease-in-out infinite; */
+}
+
+@keyframes letterPulse {
+  0%, 100% {
+    transform: scale(1);
+    box-shadow: 0 0 10px rgba(255, 224, 130, 0.3);
+  }
+  50% {
+    transform: scale(1.1);
+    box-shadow: 0 0 20px rgba(255, 224, 130, 0.6);
+  }
+}
+
+.quiz-popup__result.error {
+  color: #f87171;
+  background: rgba(248, 113, 113, 0.1);
+  text-shadow: 0 0 10px #f87171;
+}

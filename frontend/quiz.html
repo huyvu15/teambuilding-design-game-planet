@@ -1,0 +1,749 @@
+  <!DOCTYPE html>
+  <html lang="vi">
+    <head>
+      <meta charset="utf-8" />
+      <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+      <title>Quiz - Galaxy Symphony</title>
+      <link href="https://fonts.googleapis.com/css2?family=Potta+One&amp;display=swap" rel="stylesheet">
+      <!-- <link rel="stylesheet" href="quiz.css" /> -->
+       <style>
+        * {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  min-height: 100vh;
+  overflow: hidden;
+  background: #000 url("https://raw.githubusercontent.com/huyvu15/teambuilding-design-game-planet/main/frontend/image/Background/123.png") center / cover no-repeat fixed;
+  font-family: 'Potta One', cursive, Arial, sans-serif;
+  color: #fff;
+  position: relative;
+}
+
+.quiz-background {
+  position: fixed;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 0;
+}
+
+.galaxy-container {
+  position: fixed;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  background: transparent;
+  z-index: 0;
+}
+
+.nebula-layer {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  opacity: 0.6;
+}
+
+.nebula {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(60px);
+  animation: nebulaPulse 8s ease-in-out infinite;
+}
+
+.nebula-1 { width: 400px; height: 400px; background: radial-gradient(circle, rgba(138, 43, 226, 0.4) 0%, transparent 70%); top: 20%; left: 15%; animation-delay: 0s; }
+.nebula-2 { width: 500px; height: 300px; background: radial-gradient(ellipse, rgba(65, 105, 225, 0.4) 0%, transparent 70%); top: 50%; right: 20%; animation-delay: 2s; }
+.nebula-3 { width: 350px; height: 350px; background: radial-gradient(circle, rgba(147, 51, 234, 0.3) 0%, transparent 70%); bottom: 15%; left: 40%; animation-delay: 4s; }
+.nebula-4 { width: 300px; height: 400px; background: radial-gradient(ellipse, rgba(30, 144, 255, 0.3) 0%, transparent 70%); top: 10%; right: 35%; animation-delay: 1s; }
+.nebula-5 { width: 450px; height: 250px; background: radial-gradient(ellipse, rgba(123, 31, 162, 0.35) 0%, transparent 70%); bottom: 30%; right: 10%; animation-delay: 3s; }
+
+@keyframes nebulaPulse {
+  0%, 100% { opacity: 0.4; transform: scale(1); }
+  50% { opacity: 0.7; transform: scale(1.1); }
+}
+
+#star-canvas {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.center-glow {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 800px;
+  height: 800px;
+  background: radial-gradient(circle, rgba(255, 255, 255, 0.03) 0%, transparent 60%);
+  pointer-events: none;
+}
+  
+.galaxy-title {
+  position: fixed;
+  left: 50%;
+  top: 15%;
+  transform: translateX(-50%);
+  max-width: min(80vw, 520px);
+  width: auto;
+  height: auto;
+  z-index: 1;
+  pointer-events: none;
+  filter: drop-shadow(0 16px 18px rgba(0,0,0,0.6));
+}
+
+.question-label {
+  position: fixed;
+  top: 20px;
+  left: 20px;
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 16px;
+  font-weight: 500;
+  z-index: 2;
+  pointer-events: none;
+}
+
+.planets {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  position: relative;
+  min-height: calc(100vh - 180px);
+  z-index: 1;
+  pointer-events: auto;
+}
+
+.planet {
+  position: absolute;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: var(--size, 96px);
+  height: var(--size, 96px);
+  transform: scale(var(--scale, 1));
+  transition: transform 200ms ease, filter 0.3s ease-in-out;
+  pointer-events: auto;
+  cursor: pointer;
+}
+
+.planet .img {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+.planet[data-planet="1"] { top: 60vh; left: 35vw; --size: 134px; --scale: 2; }
+.planet[data-planet="2"] { top: 40vh; left: -17vw; --size: 134px; --scale: 2; }
+.planet[data-planet="3"] { top: 4vh; left: 22vw; --size: 51px; --scale: 0.95; }
+.planet[data-planet="4"] { top: 0vh; left: 39vw; --size: 50px; --scale: -1.07; }
+.planet[data-planet="5"] { top: 33vh; left: 91vw; --size: 85px; --scale: 3.85; }
+.planet[data-planet="6"] { top: 0vh; left: 0vw; --size: 68px; --scale: 0.9; }
+.planet[data-planet="7"] { top: 4vh; left: -35vw; --size: 184px; --scale: 0.95; transform: rotate(323deg); }
+.planet[data-planet="8"] { top: 23vh; left: 22vw; --size: 61px; --scale: 0.92; }
+.planet[data-planet="9"] { top: 13vh; left: 32vw; --size: 71px; --scale: 0.95; }
+.planet[data-planet="10"] { top: -304px; left: 49vw; --size: 500px; --scale: 0.98; }
+
+.quiz-popup {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  background: transparent;
+  z-index: 10;
+  padding: 20px;
+  padding-bottom: 20px;
+  opacity: 1;
+  transition: opacity 0.3s ease;
+  pointer-events: none;
+}
+
+.quiz-popup__content {
+  /* position: relative; */
+  /* width: 90%; */
+  max-width: min(92vw, 520px);
+  animation: slideUp 0.5s ease;
+  pointer-events: auto;
+}
+  
+.quiz-popup__bg {
+  width: 100%;
+  height: 217px;
+  /* max-height: 223px; */
+  display: block;
+  object-fit: contain;
+}
+
+.quiz-popup__inner {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  padding: 8% 8% 12%;
+  gap: 8px;
+  color: #e0e6ff;
+  overflow: hidden;
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(100%);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.quiz-popup__title {
+  font-size: clamp(18px, 4vw, 24px);
+  font-weight: 700;
+  color: #e6ecff;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin: 0;
+  text-shadow: 0 0 10px #5ec8ff, 0 0 20px #5ec8ff;
+}
+
+.quiz-popup__question {
+  font-size: clamp(14px, 3vw, 18px);
+  color: #e6ecff;
+  text-align: center;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: normal;
+  line-height: 1.6;
+  margin: 0;
+  padding: 0;
+  min-height: 60px;
+  /* display: flex; */
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  max-width: 100%;
+  box-sizing: border-box;
+}
+
+.quiz-popup__question.complete-message {
+  font-size: clamp(18px, 4vw, 24px);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  text-shadow: 0 0 10px #5ec8ff, 0 0 20px #5ec8ff;
+  line-height: 1.4;
+  margin-top: 20px;
+}
+
+.quiz-popup__input-container {
+  position: relative;
+  width: 60%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 56px;
+}
+
+.quiz-popup__input {
+  width: 100%;
+  padding: 12px 16px;
+  border: none;
+  border-radius: 8px;
+  outline: none;
+  background: rgba(20, 24, 40, 0.6);
+  color: #e6ecff;
+  font-weight: 600;
+  text-transform: uppercase;
+  font-family: 'Potta One', cursive, Arial, sans-serif;
+  font-size: 14px;
+  text-align: center;
+  transition: background 0.3s ease;
+}
+
+.quiz-popup__input:focus {
+  background: rgba(20, 24, 40, 0.8);
+}
+
+.quiz-popup__input::placeholder {
+  color: rgba(230, 236, 255, 0.5);
+  text-transform: none;
+}
+
+.quiz-popup__submit {
+  width: 100%;
+  max-width: 200px;
+  padding: 12px 24px;
+  border: none;
+  border-radius: 12px;
+  background: linear-gradient(180deg, #ffde8a 0%, #ff7f2f 100%);
+  border: 2px solid #ffb23a;
+  color: #4b2000;
+  font-family: 'Potta One', cursive, Arial, sans-serif;
+  font-weight: 900;
+  font-size: 20px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  cursor: pointer;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.25);
+  transition: all 0.2s ease;
+  margin-top: 4px;
+  display: block;
+  visibility: visible;
+  opacity: 1;
+  position: relative;
+  z-index: 10;
+}
+
+.quiz-popup__submit:hover:not(:disabled) {
+  transform: scale(1.05);
+  background: linear-gradient(180deg, #ffe299 0%, #ff9d4d 100%);
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
+}
+
+.quiz-popup__submit:active:not(:disabled) {
+  transform: scale(0.97);
+  background: linear-gradient(180deg, #ffce70 0%, #ff6a00 100%);
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.4);
+}
+
+.quiz-popup__submit:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.quiz-popup__result {
+  min-height: 24px;
+  font-size: 18px;
+  font-weight: 700;
+  text-align: center;
+  padding: 8px 12px;
+  border-radius: 8px;
+  transition: all 0.3s ease;
+  margin-top: -15px;
+}
+
+.quiz-popup__result.success {
+  
+}
+
+.quiz-popup__result .letter-display {
+  display: inline-block;
+  font-size: 32px;
+  font-weight: 900;
+  /* color: #ffe082; */
+  /* text-shadow: 0 0 15px #ffe082, 0 0 30px #ffb23a; */
+  margin: 0 8px;
+  padding: 10px 12px;
+  background: rgba(255, 224, 130, 0.1);
+  border: 2px solid rgba(255, 224, 130, 0.3);
+  border-radius: 8px;
+  /* animation: letterPulse 1s ease-in-out infinite; */
+}
+
+@keyframes letterPulse {
+  0%, 100% {
+    transform: scale(1);
+    box-shadow: 0 0 10px rgba(255, 224, 130, 0.3);
+  }
+  50% {
+    transform: scale(1.1);
+    box-shadow: 0 0 20px rgba(255, 224, 130, 0.6);
+  }
+}
+
+.quiz-popup__result.error {
+  color: #f87171;
+  background: rgba(248, 113, 113, 0.1);
+  text-shadow: 0 0 10px #f87171;
+}
+
+.planet.selected {
+  border-radius: 50%;
+  transition: box-shadow 0.3s ease-in-out;
+}
+
+.planet.selected .img {
+  filter: brightness(2) contrast(1.05) drop-shadow(0 0 8px #7b5bfc) drop-shadow(0 0 16px #7b5bfc);
+  transition: filter 0.3s ease-in-out;
+}
+
+.planet:hover {
+  filter: brightness(1.1);
+  transform: scale(calc(var(--scale, 1) * 1.05));
+}
+
+       </style>
+    </head>
+    <body>
+      <!-- Background với các hành tinh -->
+      <div class="quiz-background">
+        <div class="galaxy-container">
+          <div class="center-glow"></div>
+          <div class="nebula-layer">
+            <div class="nebula nebula-1"></div>
+            <div class="nebula nebula-2"></div>
+            <div class="nebula nebula-3"></div>
+            <div class="nebula nebula-4"></div>
+            <div class="nebula nebula-5"></div>
+          </div>
+          <canvas id="star-canvas"></canvas>
+        </div>
+        
+        <!-- Title Galaxy Symphony -->
+        <!-- <img class="galaxy-title" src="https://raw.githubusercontent.com/huyvu15/teambuilding-design-game-planet/main/frontend/image/Image/Galaxy Symphony.png" alt="Galaxy Symphony" /> -->
+        
+        <!-- Danh sách hành tinh -->
+        <ul class="planets">
+          <li class="planet" data-planet="1">
+            <img class="img" src="https://raw.githubusercontent.com/huyvu15/teambuilding-design-game-planet/main/frontend/image/img-light/1.png" alt="Hành tinh 1" />
+          </li>
+          <li class="planet" data-planet="2">
+            <img class="img" src="https://raw.githubusercontent.com/huyvu15/teambuilding-design-game-planet/main/frontend/image/img-light/2.png" alt="Hành tinh 2" />
+          </li>
+          <li class="planet" data-planet="3">
+            <img class="img" src="https://raw.githubusercontent.com/huyvu15/teambuilding-design-game-planet/main/frontend/image/img-light/3.png" alt="Hành tinh 3" />
+          </li>
+          <li class="planet" data-planet="4">
+            <img class="img" src="https://raw.githubusercontent.com/huyvu15/teambuilding-design-game-planet/main/frontend/image/img-light/4.png" alt="Hành tinh 4" />
+          </li>
+          <li class="planet" data-planet="5">
+            <img class="img" src="https://raw.githubusercontent.com/huyvu15/teambuilding-design-game-planet/main/frontend/image/img-light/5.png" alt="Hành tinh 5" />
+          </li>
+          <li class="planet" data-planet="6">
+            <img class="img" src="https://raw.githubusercontent.com/huyvu15/teambuilding-design-game-planet/main/frontend/image/img-light/6.png" alt="Hành tinh 6" />
+          </li>
+          <li class="planet" data-planet="7">
+            <img class="img" src="https://raw.githubusercontent.com/huyvu15/teambuilding-design-game-planet/main/frontend/image/img-light/7.png" alt="Hành tinh 7" />
+          </li>
+          <li class="planet" data-planet="8">
+            <img class="img" src="https://raw.githubusercontent.com/huyvu15/teambuilding-design-game-planet/main/frontend/image/img-light/8.png" alt="Hành tinh 8" />
+          </li>
+          <li class="planet" data-planet="9">
+            <img class="img" src="https://raw.githubusercontent.com/huyvu15/teambuilding-design-game-planet/main/frontend/image/img-light/9.png" alt="Hành tinh 9" />
+          </li>
+          <li class="planet" data-planet="10">  
+            <img class="img" src="https://raw.githubusercontent.com/huyvu15/teambuilding-design-game-planet/main/frontend/image/img-light/10.png" alt="Hành tinh 10" />
+          </li>
+        </ul>
+      </div>
+      
+      <!-- Popup câu hỏi -->
+      <div class="quiz-popup" id="quizPopup">
+        <div class="quiz-popup__content">
+          <img class="quiz-popup__bg" src="https://raw.githubusercontent.com/huyvu15/teambuilding-design-game-planet/main/frontend/image/Image/Box.svg" alt="Popup background" />
+          <div class="quiz-popup__inner">
+            <h2 class="quiz-popup__title">NHẬP CÂU TRẢ LỜI</h2>
+            <p class="quiz-popup__question" id="questionText"></p>
+            <div class="quiz-popup__input-container">
+              <input class="quiz-popup__input" id="answerInput" type="text" placeholder="..." />
+            </div>
+            <button class="quiz-popup__submit" id="submitBtn" type="button">GỬI</button>
+            <div class="quiz-popup__result" id="resultText"></div>
+          </div>
+        </div>
+      </div>
+
+      <script>
+        (function() {
+          const API_BASE = window.API_BASE || 'http://localhost:3000';
+          
+          const q = new URLSearchParams(location.search);
+          const team_id = q.get('team_id' );
+          const number = q.get('number') || '1';
+          
+          if (!team_id) {
+            alert('Thiếu team_id trong URL. Vui lòng thêm ?team_id=...&number=...');
+          }
+          
+          const questionText = document.getElementById('questionText');
+          const answerInput = document.getElementById('answerInput');
+          const submitBtn = document.getElementById('submitBtn');
+          const resultText = document.getElementById('resultText');
+          const inputContainer = document.querySelector('.quiz-popup__input-container');
+          const popupTitle = document.querySelector('.quiz-popup__title');
+          
+          let currentQuizIndex = null;
+          
+          function showError(message) {
+            resultText.textContent = message;
+            resultText.classList.add('error');
+            setTimeout(() => {
+              resultText.classList.remove('error');
+              resultText.textContent = '';
+            }, 2000);
+          }
+          
+          async function fetchAPI(path, options = {}) {
+            const base = API_BASE.replace(/\/+$/, '');
+            const cleanPath = path.replace(/^\/+/, '/');
+            const url = base + cleanPath;
+            const headers = {
+              'ngrok-skip-browser-warning': 'true',
+              ...options.headers
+            };
+            
+            if (options.body && !headers['Content-Type'] && !headers['content-type']) {
+              headers['Content-Type'] = 'application/json';
+            }
+            
+            try {
+              const response = await fetch(url, {
+                ...options,
+                headers,
+                mode: 'cors',
+                credentials: 'omit'
+              });
+              
+              const contentType = response.headers.get('content-type');
+              if (contentType && contentType.includes('application/json')) {
+                if (!response.ok) {
+                  const errorData = await response.json();
+                  throw new Error(errorData.message || `API error ${response.status}`);
+                }
+                return await response.json();
+              }
+              
+              const text = await response.text();
+              if (response.status >= 400) {
+                throw new Error(`API error ${response.status}: ${text.substring(0, 200)}`);
+              }
+              throw new Error(`Server trả về HTML thay vì JSON`);
+            } catch (error) {
+              if (error.message && (error.message.includes('CORS') || error.message.includes('Failed to fetch'))) {
+                throw new Error('Không thể kết nối đến server.');
+              }
+              throw error;
+            }
+          }
+          
+          async function loadQuiz() {
+            if (!team_id) {
+              resultText.textContent = 'Lỗi: Thiếu team_id trong URL';
+              return;
+            }
+            
+            try {
+              const data = await fetchAPI('/api/quiz', {
+                method: 'POST',
+                body: JSON.stringify({ team: team_id, number: number })
+              });
+              
+              if (data.status === 'in_progress' && data.nextQuiz) {
+                currentQuizIndex = data.quiz_index;
+                questionText.textContent = data.nextQuiz.question || '';
+                questionText.classList.remove('complete-message');
+                answerInput.value = '';
+                resultText.textContent = '';
+                answerInput.disabled = false;
+                submitBtn.disabled = false;
+                popupTitle.style.display = '';
+                questionText.style.display = '';
+                inputContainer.style.display = '';
+                submitBtn.style.display = '';
+              } else if (data.status === 'complete') {
+                popupTitle.style.display = 'none';
+                questionText.textContent = 'Đã hoàn thành câu hỏi!';
+                questionText.classList.add('complete-message');
+                questionText.style.display = '';
+                inputContainer.style.display = 'none';
+                submitBtn.style.display = 'none';
+                answerInput.disabled = true;
+                submitBtn.disabled = true;
+                
+                if (data.hint) {
+                  resultText.innerHTML = `Chữ cái của bạn là:<br> </br> <span class="letter-display">${data.hint.trim()}</span>`;
+                  resultText.classList.add('success');
+                }
+              }
+            } catch (error) {
+              resultText.textContent = 'Lỗi: ' + error.message;
+            }
+          }
+          
+          async function submitAnswer() {
+            const answer = answerInput.value.trim();
+            if (!answer || !currentQuizIndex) {
+              showError(!answer ? 'Vui lòng nhập câu trả lời!' : 'Chưa có câu hỏi!');
+              return;
+            }
+            
+            submitBtn.disabled = true;
+            resultText.textContent = '';
+            
+            try {
+              const data = await fetchAPI('/api/answer-quiz', {
+                method: 'POST',
+                body: JSON.stringify({
+                  team: team_id,
+                  number: number,
+                  quiz_index: currentQuizIndex,
+                  answer: answer
+                })
+              });
+              
+              if (data.status === 'success') {
+                if (data.hint) {
+                  const letter = data.hint.trim().match(/[A-ZÀÁẠẢÃÂẦẤẬẨẪĂẰẮẶẲẴÈÉẸẺẼÊỀẾỆỂỄÌÍỊỈĨÒÓỌỎÕÔỒỐỘỔỖƠỜỚỢỞỠÙÚỤỦŨƯỪỨỰỬỮỲÝỴỶỸĐ]/i)?.[0]?.toUpperCase() || '';
+                  if (letter) {
+                    resultText.innerHTML = `Chữ cái đúng của bạn là: <span class="letter-display">${letter}</span>`;
+                    resultText.classList.add('success');
+                  }
+                }
+                setTimeout(() => loadQuiz(), 1000);
+              } else if (data.status === 'false') {
+                showError('Sai rồi! Vui lòng thử lại.');
+              }
+            } catch (error) {
+              showError('Lỗi: ' + error.message);
+            } finally {
+              submitBtn.disabled = false;
+            }
+          }
+          
+          submitBtn.addEventListener('click', submitAnswer);
+          answerInput.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter') submitAnswer();
+          });
+          
+          loadQuiz();
+        })();
+      </script>
+      
+      <script>
+        const canvas = document.getElementById('star-canvas');
+        if (canvas) {
+          const ctx = canvas.getContext('2d');
+          canvas.width = window.innerWidth;
+          canvas.height = window.innerHeight;
+          const stars = [];
+          const numStars = 300;
+
+          class Star {
+              constructor() {
+                  this.reset();
+              }
+
+              reset() {
+                  this.x = (Math.random() - 0.5) * canvas.width * 2;
+                  this.y = (Math.random() - 0.5) * canvas.height * 2;
+                  this.z = Math.random() * 2000 + 500;
+                  const colors = [
+                      { r: 255, g: 255, b: 255 },
+                      { r: 200, g: 216, b: 230 },
+                      { r: 255, g: 250, b: 205 },
+                      { r: 221, g: 160, b: 221 },
+                      { r: 150, g: 206, b: 250 },
+                  ];
+                  this.color = colors[Math.floor(Math.random() * colors.length)];
+                  this.speed = Math.random() * 0.5 + 0.3;
+                  this.twinkleSpeed = Math.random() * 0.02 + 0.01;
+                  this.twinkleOffset = Math.random() * Math.PI * 2;
+              }
+
+              update() {
+                  this.z -= this.speed * 3;
+                  if (this.z <= 1) {
+                      this.reset();
+                      this.z = 2500;
+                  }
+              }
+
+              draw() {
+                  const scale = 1000 / this.z;
+                  const x2d = this.x * scale + canvas.width / 2;
+                  const y2d = this.y * scale + canvas.height / 2;
+                  if (x2d < 0 || x2d > canvas.width || y2d < 0 || y2d > canvas.height) return;
+                  const size = (1 - this.z / 2500) * 3 + 0.5;
+                  const brightness = 1 - this.z / 2500;
+                  const twinkle = Math.sin(Date.now() * this.twinkleSpeed + this.twinkleOffset) * 0.3 + 0.7;
+
+                  if (size > 1.5) {
+                      const glowGradient = ctx.createRadialGradient(x2d, y2d, 0, x2d, y2d, size * 3);
+                      glowGradient.addColorStop(0, `rgba(${this.color.r}, ${this.color.g}, ${this.color.b}, ${brightness * twinkle * 0.5})`);
+                      glowGradient.addColorStop(1, 'rgba(255, 255, 255, 0)');
+                      ctx.fillStyle = glowGradient;
+                      ctx.fillRect(x2d - size * 3, y2d - size * 3, size * 6, size * 6);
+                  }
+
+                  ctx.fillStyle = `rgba(${this.color.r}, ${this.color.g}, ${this.color.b}, ${brightness * twinkle})`;
+                  ctx.beginPath();
+                  ctx.arc(x2d, y2d, size, 0, Math.PI * 2);
+                  ctx.fill();
+
+                  if (this.z < 800) {
+                      const prevZ = this.z + this.speed * 5;
+                      const prevScale = 1000 / prevZ;
+                      const prevX = this.x * prevScale + canvas.width / 2;
+                      const prevY = this.y * prevScale + canvas.height / 2;
+                      const gradient = ctx.createLinearGradient(x2d, y2d, prevX, prevY);
+                      gradient.addColorStop(0, `rgba(${this.color.r}, ${this.color.g}, ${this.color.b}, ${brightness * 0.8})`);
+                      gradient.addColorStop(1, 'rgba(255, 255, 255, 0)');
+                      ctx.strokeStyle = gradient;
+                      ctx.lineWidth = size * 0.8;
+                      ctx.beginPath();
+                      ctx.moveTo(x2d, y2d);
+                      ctx.lineTo(prevX, prevY);
+                      ctx.stroke();
+                  }
+              }
+          }
+
+          for (let i = 0; i < numStars; i++) {
+              stars.push(new Star());
+          }
+
+          function animate() {
+              ctx.clearRect(0, 0, canvas.width, canvas.height);
+              stars.forEach(star => {
+                  star.update();
+                  star.draw();
+              });
+              requestAnimationFrame(animate);
+          }
+          
+          window.addEventListener('resize', () => {
+              canvas.width = window.innerWidth;
+              canvas.height = window.innerHeight;
+          });
+          
+          animate();
+        }
+      </script>
+      
+      <script>
+        // Xử lý click vào hành tinh để làm sáng (giống game.html)
+        (function() {
+          const planets = document.querySelectorAll('.planet');
+          
+          planets.forEach(function(planet) {
+            planet.addEventListener('click', function() {
+              // Toggle class 'selected' cho hành tinh được click (giống game.html)
+              const isSelected = planet.classList.contains('selected');
+              
+              // Nếu muốn chỉ một hành tinh sáng tại một thời điểm, bỏ comment dòng sau:
+              // planets.forEach(p => p.classList.remove('selected'));
+              
+              // Toggle trạng thái sáng
+              if (isSelected) {
+                planet.classList.remove('selected');
+              } else {
+                planet.classList.add('selected');
+              }
+            });
+          });
+        })();
+      </script>
+    </body>
+  </html>

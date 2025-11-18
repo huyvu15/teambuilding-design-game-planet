@@ -1,0 +1,10 @@
+# *.html
+# *.css
+# *.js
+
+/backend/node_modules
+/backend/data
+/backend/server.js
+/backend/package.json
+/backend/package-lock.json
+/backend/README.md

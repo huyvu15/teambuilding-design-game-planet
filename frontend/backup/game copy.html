@@ -1,0 +1,553 @@
+<!DOCTYPE html>
+<html lang="vi">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <title>Galaxy Symphony - Planets</title>
+    <!-- <link rel="preload" as="image" href="https://raw.githubusercontent.com/huyvu15/teambuilding-design-game-planet/main/frontend/image/Image/bg.png" /> -->
+    <link rel="preload" as="video" href="https://raw.githubusercontent.com/huyvu15/teambuilding-design-game-planet/main/frontend/image/Video/Comp2.mp4" />
+    <link rel="preload" as="image" href="https://raw.githubusercontent.com/huyvu15/teambuilding-design-game-planet/main/frontend/image/Image/Arrow.png" />
+    <link rel="preload" as="image" href="https://raw.githubusercontent.com/huyvu15/teambuilding-design-game-planet/main/frontend/image/Image/Button-Send.png" />
+    <link rel="preload" as="image" href="https://raw.githubusercontent.com/huyvu15/teambuilding-design-game-planet/main/frontend/image/Image/Input.png" />
+    <link rel="stylesheet" href="game.css" />
+  </head>
+  <body>
+    <div class="game-screen">
+      <video class="bg-video" src="https://raw.githubusercontent.com/huyvu15/teambuilding-design-game-planet/main/frontend/image/Video/Comp2.mp4" autoplay muted loop playsinline></video>
+      <main class="stage" aria-label="Hệ hành tinh">
+        <img class="galaxy-title" src="https://raw.githubusercontent.com/huyvu15/teambuilding-design-game-planet/main/frontend/image/Image/Galaxy Symphony.png" alt="Galaxy Symphony" />
+        <!-- Planet list -->
+        <ul class="planets">
+          <li class="planet current" data-planet="1" data-planet-id="br45br2">
+            <img class="img dark" src="https://raw.githubusercontent.com/huyvu15/teambuilding-design-game-planet/main/frontend/image/Planet/1-2.png" alt="Hành tinh 1 (tối)" />
+            <img class="img lit" src="https://raw.githubusercontent.com/huyvu15/teambuilding-design-game-planet/main/frontend/image/Planet/1.png" alt="Hành tinh 1 (sáng)" />
+            <img class="arrow" src="https://raw.githubusercontent.com/huyvu15/teambuilding-design-game-planet/main/frontend/image/Image/Arrow.png" alt="Mũi tên" />
+          </li>
+          <li class="planet" data-planet="2" data-planet-id="bl19br2">
+            <img class="img dark" src="https://raw.githubusercontent.com/huyvu15/teambuilding-design-game-planet/main/frontend/image/Planet/2-2.png" alt="Hành tinh 2 (tối)" />
+            <img class="img lit" src="https://raw.githubusercontent.com/huyvu15/teambuilding-design-game-planet/main/frontend/image/Planet/2.png" alt="Hành tinh 2 (sáng)" />
+          </li>
+          <li class="planet" data-planet="3" data-planet-id="gr76br1">
+            <img class="img dark" src="https://raw.githubusercontent.com/huyvu15/teambuilding-design-game-planet/main/frontend/image/Planet/3-2.png" alt="Hành tinh 3 (tối)" />
+            <img class="img lit" src="https://raw.githubusercontent.com/huyvu15/teambuilding-design-game-planet/main/frontend/image/Planet/3.png" alt="Hành tinh 3 (sáng)" />
+          </li>
+          <li class="planet" data-planet="4" data-planet-id="rd68br2">
+            <img class="img dark" src="https://raw.githubusercontent.com/huyvu15/teambuilding-design-game-planet/main/frontend/image/Planet/4-2.png" alt="Hành tinh 4 (tối)" />
+            <img class="img lit" src="https://raw.githubusercontent.com/huyvu15/teambuilding-design-game-planet/main/frontend/image/Planet/4.png" alt="Hành tinh 4 (sáng)" />
+          </li>
+          <li class="planet" data-planet="5" data-planet-id="or34br1">
+            <img class="img dark" src="https://raw.githubusercontent.com/huyvu15/teambuilding-design-game-planet/main/frontend/image/Planet/5-2.png" alt="Hành tinh 5 (tối)" />
+            <img class="img lit" src="https://raw.githubusercontent.com/huyvu15/teambuilding-design-game-planet/main/frontend/image/Planet/5.png" alt="Hành tinh 5 (sáng)" />
+          </li>
+          <li class="planet" data-planet="6" data-planet-id="bl52br1">
+            <img class="img dark" src="https://raw.githubusercontent.com/huyvu15/teambuilding-design-game-planet/main/frontend/image/Planet/6-2.png" alt="Hành tinh 6 (tối)" />
+            <img class="img lit" src="https://raw.githubusercontent.com/huyvu15/teambuilding-design-game-planet/main/frontend/image/Planet/6.png" alt="Hành tinh 6 (sáng)" />
+          </li>
+          <li class="planet" data-planet="7" data-planet-id="br90br1">
+            <img class="img dark" src="https://raw.githubusercontent.com/huyvu15/teambuilding-design-game-planet/main/frontend/image/Planet/7-2.png" alt="Hành tinh 7 (tối)" />
+            <img class="img lit" src="https://raw.githubusercontent.com/huyvu15/teambuilding-design-game-planet/main/frontend/image/Planet/7.png" alt="Hành tinh 7 (sáng)" />
+          </li>
+          <li class="planet" data-planet="8" data-planet-id="or82br2">
+            <img class="img dark" src="https://raw.githubusercontent.com/huyvu15/teambuilding-design-game-planet/main/frontend/image/Planet/8-2.png" alt="Hành tinh 8 (tối)" />
+            <img class="img lit" src="https://raw.githubusercontent.com/huyvu15/teambuilding-design-game-planet/main/frontend/image/Planet/8.png" alt="Hành tinh 8 (sáng)" />
+          </li>
+          <li class="planet" data-planet="9" data-planet-id="gr21br2">
+            <img class="img dark" src="https://raw.githubusercontent.com/huyvu15/teambuilding-design-game-planet/main/frontend/image/Planet/9-2.png" alt="Hành tinh 9 (tối)" />
+            <img class="img lit" src="https://raw.githubusercontent.com/huyvu15/teambuilding-design-game-planet/main/frontend/image/Planet/9.png" alt="Hành tinh 9 (sáng)" />
+          </li>
+          <li class="planet" data-planet="10" data-planet-id="rd57br1">
+            <img class="img dark" src="https://raw.githubusercontent.com/huyvu15/teambuilding-design-game-planet/main/frontend/image/Planet/10-2.png" alt="Hành tinh 10 (tối)" />
+            <img class="img lit" src="https://raw.githubusercontent.com/huyvu15/teambuilding-design-game-planet/main/frontend/image/Planet/10.png" alt="Hành tinh 10 (sáng)" />
+          </li>
+        </ul>
+
+        <!-- Input + Send -->
+        <section class="message-box" aria-label="Nhập thông điệp">
+          <div class="topbar">
+            <div class="pill" id="teamInfo">Đang tải…</div>
+          </div>
+          <img class="input-bg" src="https://raw.githubusercontent.com/huyvu15/teambuilding-design-game-planet/main/frontend/image/Image/Input.png" alt="Khung nhập" />
+          <input class="message-input" id="keywordInput" type="text" inputmode="text" placeholder="NHẬP THÔNG ĐIỆP CỦA BẠN" />
+          <button class="send-btn" id="sendBtn" type="button">
+            <img src="https://raw.githubusercontent.com/huyvu15/teambuilding-design-game-planet/main/frontend/image/Image/Button-Send.png" alt="Gửi" />
+          </button>
+        </section>
+      </main>
+    </div>
+
+    <!-- Popup chọn hành tinh sau khi đoán đúng -->
+    <div class="choose-modal" id="chooseModal" aria-hidden="true">
+      <div class="choose-modal__box" role="dialog" aria-label="Chọn hành tinh">
+        <img class="choose-modal__bg" src="https://raw.githubusercontent.com/huyvu15/teambuilding-design-game-planet/main/frontend/image/Image/PopUp2.png" alt="Hộp thoại" />
+        <div class="choose-modal__content">
+          <p class="choose-modal__text">BẠN CÓ MUỐN CHỌN HÀNH TINH...?</p>
+          <div class="choose-modal__actions">
+            <button id="chooseYesBtn" class="choose-btn yes" type="button" aria-label="Có">
+              <img src="https://raw.githubusercontent.com/huyvu15/teambuilding-design-game-planet/main/frontend/image/Image/Button-Send.png" alt="Có" />
+            </button>
+            <button id="chooseNoBtn" class="choose-btn no" type="button" aria-label="Không">
+              <img src="https://raw.githubusercontent.com/huyvu15/teambuilding-design-game-planet/main/frontend/image/Image/Button-No.png" alt="Không" />
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      (function(){
+        const API = (path) => (window.API_BASE || 'https://5b2c0da66a33.ngrok-free.app') + path;
+        const q = new URLSearchParams(location.search);
+        const initialBranch = Number(q.get('branch') || 1);
+        // ID hành tinh theo backend mới. Ưu tiên lấy từ URL, mặc định là rd57br1
+        const myPlanetIdFromQuery = q.get('planet_id') || q.get('planet') || 'rd57br1';
+
+        // Helper function để fetch với header ngrok và xử lý CORS
+        async function fetchAPI(path, options = {}) {
+          const url = API(path);
+          const headers = {
+            'ngrok-skip-browser-warning': 'true',
+            ...options.headers
+          };
+          
+          // Thêm Content-Type nếu có body và chưa có trong headers
+          if (options.body && !headers['Content-Type'] && !headers['content-type']) {
+            headers['Content-Type'] = 'application/json';
+          }
+          
+          try {
+            const response = await fetch(url, { 
+              ...options, 
+              headers,
+              mode: 'cors',
+              credentials: 'omit'
+            });
+            
+            // Kiểm tra content-type để đảm bảo là JSON
+            const contentType = response.headers.get('content-type');
+            if (contentType && contentType.includes('application/json')) {
+          return response;
+        }
+
+            // Nếu không phải JSON, đọc text để debug
+            const text = await response.text();
+            if (response.status >= 400) {
+              throw new Error(`API error ${response.status}: ${text.substring(0, 200)}`);
+            }
+            throw new Error(`Server trả về HTML thay vì JSON. Response: ${text.substring(0, 100)}`);
+          } catch (error) {
+            if (error.message && (error.message.includes('CORS') || error.message.includes('Failed to fetch'))) {
+              console.error('CORS error:', error);
+            }
+            throw error;
+          }
+        }
+        
+       
+        function parsePlanetId(planetId) {
+          if (!planetId) return null;
+          
+          // Tìm pattern "br[number]" ở cuối để lấy branch
+          const branchMatch = planetId.match(/br(\d+)$/i);
+          if (branchMatch) {
+            const branch = Number(branchMatch[1]);
+            return { branch: branch };
+          }
+          
+          return null;
+        }
+        
+        // Helper lấy planet_id từ DOM element dựa trên planet number
+        function getPlanetIdByNum(planetNum) {
+          const el = document.querySelector(`.planet[data-planet="${planetNum}"]`);
+          const pid = el?.getAttribute('data-planet-id');
+          return pid || null;
+        }
+        
+        function getMyPlanetId() {
+          return myPlanetIdFromQuery;
+        }
+
+        const planets = Array.from(document.querySelectorAll('.planet'));
+        const teamInfo = document.getElementById('teamInfo');
+        const keywordInput = document.getElementById('keywordInput');
+        const sendBtn = document.getElementById('sendBtn');
+        const chooseModal = document.getElementById('chooseModal');
+        const chooseYesBtn = document.getElementById('chooseYesBtn');
+        const chooseNoBtn = document.getElementById('chooseNoBtn');
+
+        let myBranch = Number.isFinite(initialBranch) ? initialBranch : 1;
+        let stateData = []; // Danh sách planet_id đã sáng
+        let myTeamCorrect = false; // Đã đoán đúng chưa
+        let selectedPlanetId = null; // planet_id của hành tinh đang được chọn
+        let currentStage = 'guess'; // Stage: guess hoặc map
+        let availablePlanets = { sameBranch: [], otherBranch: [] }; // Danh sách planets có thể ghép
+
+        function updatePlanetDisplay() {
+          planets.forEach(function(p) {
+            const planetId = getPlanetIdByNum(Number(p.dataset.planet));
+            const parsedInfo = parsePlanetId(planetId);
+            const planetBranch = parsedInfo?.branch ?? null;
+            
+            // Hành tinh chính: có planet_id trùng với URL
+            const isCurrent = planetId === myPlanetIdFromQuery;
+            
+            // Hành tinh đã sáng: có planet_id trong stateData hoặc là hành tinh chính đã đoán đúng
+            const isLit = (isCurrent && myTeamCorrect) || (planetId && stateData.includes(planetId));
+            const shouldShowLit = isLit;
+            
+            // Có thể chọn: đã đoán đúng, hành tinh đã sáng, không phải hành tinh chính, stage là map, và ở branch khác
+            const isOtherBranch = planetBranch && planetBranch !== myBranch;
+            const canSelect = myTeamCorrect && isLit && !isCurrent && currentStage === 'map' && isOtherBranch;
+
+            p.classList.toggle('current', isCurrent);
+            p.classList.toggle('lit', !!isLit);
+            p.classList.toggle('selectable', canSelect);
+            
+            // Selected: hành tinh đang được chọn
+            if (selectedPlanetId === planetId && !isCurrent) {
+              p.classList.add('selected');
+            } else {
+              p.classList.remove('selected');
+            }
+
+            // Update cursor
+            if (canSelect) {
+              p.style.cursor = 'pointer';
+              p.style.pointerEvents = 'auto';
+            } else if (!isCurrent) {
+              p.style.cursor = 'pointer';
+              p.style.pointerEvents = 'auto';
+            } else {
+              p.style.cursor = 'default';
+            }
+
+            // Update images
+            const lit = p.querySelector('.lit');
+            const dark = p.querySelector('.dark');
+          if (lit && dark) {
+              lit.style.opacity = shouldShowLit ? '1' : '0';
+              dark.style.opacity = shouldShowLit ? '0' : '1';
+            }
+          });
+        }
+
+        // Load team info - chỉ dựa vào planet_id từ URL
+        function loadTeam() {
+          if (!myPlanetIdFromQuery) {
+            teamInfo.textContent = 'Thiếu planet_id trong URL';
+            return;
+          }
+          
+          const parsed = parsePlanetId(myPlanetIdFromQuery);
+          if (parsed && parsed.branch) {
+            myBranch = parsed.branch;
+          }
+          
+          teamInfo.textContent = 'Planet ID: ' + myPlanetIdFromQuery + (myBranch ? ' (Branch ' + myBranch + ')' : '');
+          updatePlanetDisplay();
+        }
+        
+        // Send guess - Gửi đáp án (API: POST /api/answer { planet_id, answer })
+        async function sendGuess() {
+          const key = keywordInput.value.trim();
+          if (!key) return;
+          sendBtn.disabled = true;
+          try {
+            if (!myPlanetIdFromQuery) {
+              throw new Error('Thiếu planet_id. Vui lòng thêm ?planet_id=... vào URL.');
+            }
+            const res = await fetchAPI('/api/answer', {
+              method: 'POST',
+              body: JSON.stringify({ planet_id: myPlanetIdFromQuery, answer: key })
+            });
+            const data = await res.json();
+            if (res.status >= 400) throw new Error(data.message || 'Lỗi');
+            
+            // Theo api.md: status: success | fail | not done | expire
+            const status = String(data.status || '').toLowerCase();
+            if (status === 'success') {
+              myTeamCorrect = true;
+              console.log('Đúng từ khóa');
+              if (data.ranking) {
+                console.log('Thứ hạng:', data.ranking.rank, 'Branch:', data.ranking.branch);
+              }
+              // Cập nhật stateData ngay
+              if (myPlanetIdFromQuery && !stateData.includes(myPlanetIdFromQuery)) {
+                stateData.push(myPlanetIdFromQuery);
+                updatePlanetDisplay();
+              }
+            } else if (status === 'fail') {
+              alert('Sai! Vui lòng thử lại.');
+            } else if (status === 'expire') {
+              alert('Hết lượt đoán.');
+            } else if (status === 'not done') { 
+              alert('Quiz chưa hoàn thành. Hãy làm xong quiz trước khi đoán.');
+            }
+          } catch (e) {
+            alert(e.message || 'Lỗi gửi dự đoán');
+            console.error('Lỗi sendGuess:', e);
+          } finally {
+            sendBtn.disabled = false;
+            keywordInput.value = '';
+            pollState();
+          }
+        }
+
+        // Modal helpers
+        function openChooseModal() {
+          if (!chooseModal) return;
+          chooseModal.classList.add('show');
+          chooseModal.setAttribute('aria-hidden', 'false');
+        }
+        function closeChooseModal() {
+          if (!chooseModal) return;
+          chooseModal.classList.remove('show');
+          chooseModal.setAttribute('aria-hidden', 'true');
+        }
+
+        // Biến tạm giữ mục tiêu cần ghép khi mở popup
+        let pendingTargetInfo = null;
+
+        // Modal actions
+        if (chooseYesBtn) {
+          chooseYesBtn.addEventListener('click', function() {
+            // Nếu đã chọn mục tiêu, thực hiện ghép
+            const target = pendingTargetInfo;
+            pendingTargetInfo = null;
+            closeChooseModal();
+            if (target) {
+              selectedPlanetId = null;
+              updatePlanetDisplay();
+              doMatch(target);
+            }
+          });
+        }
+        if (chooseNoBtn) {
+          chooseNoBtn.addEventListener('click', function() {
+            pendingTargetInfo = null;
+            closeChooseModal();
+          });
+        }
+
+        // Match with selected planet (API: POST /api/match { main_planet, target_planet })
+        async function doMatch(targetInfo) {
+          try {
+            const myPid = myPlanetIdFromQuery;
+            const targetPid = targetInfo.planet_id;
+            
+            if (!myPid || !targetPid) {
+              throw new Error('Không xác định được planet_id');
+            }
+            
+            const res = await fetchAPI('/api/match', {
+              method: 'POST',
+              body: JSON.stringify({
+                main_planet: myPid,
+                target_planet: targetPid
+              })
+            });
+            const data = await res.json();
+            if (res.status >= 400) throw new Error(data.message || 'Lỗi');
+            
+            // Theo api.md: status: success | false | not done | expire
+            const status = String(data.status || '').toLowerCase();
+            if (status === 'success') {
+              alert('Ghép cặp thành công!');
+              if (data.complete === 'done') {
+              location.href = 'leaderboard.html';
+            } else {
+                pollState();
+              }
+            } else if (status === 'false') {
+              alert('Ghép sai. Vui lòng thử lại.');
+            } else if (status === 'not done') {
+              alert('Hành tinh đích chưa đoán xong.');
+            } else if (status === 'expire') {
+              alert('Quá 10 lượt thử.');
+            }
+          } catch (e) {
+            alert(e.message || 'Lỗi ghép cặp');
+            console.error('Lỗi doMatch:', e);
+          } finally {
+            pollState();
+          }
+        }
+
+        // Poll state - dùng /api/available-planets để lấy trạng thái và danh sách hành tinh
+        async function pollState() {
+          try {
+            if (!myPlanetIdFromQuery) {
+              updatePlanetDisplay();
+              return;
+            }
+
+            // Gọi /api/available-planets để lấy stage, ranking, và danh sách planets
+            try {
+              const res = await fetchAPI('/api/available-planets', {
+                method: 'POST',
+                body: JSON.stringify({ planet_id: myPlanetIdFromQuery.trim() })
+              });
+
+              if (!res.ok) {
+                if (res.status === 404) {
+                  // Endpoint chưa được implement -> bỏ qua
+                  updatePlanetDisplay();
+                  return;
+                }
+                
+                // Xử lý lỗi 500 (server error) - không spam console
+                if (res.status === 500) {
+                  // Lỗi server (database connection, etc.) - bỏ qua và dùng local state
+                  // Chỉ log một lần để debug
+                  if (!window._hasLogged500Error) {
+                    console.warn('Server đang gặp lỗi (500). Sử dụng local state. Lỗi sẽ được bỏ qua.');
+                    window._hasLogged500Error = true;
+                  }
+                  updatePlanetDisplay();
+                  return;
+                }
+                
+                updatePlanetDisplay();
+                return;
+              }
+
+              const data = await res.json();
+              
+              if (data.status === 'success') {
+                // Cập nhật stage hiện tại
+                currentStage = data.stage || 'guess';
+                
+                
+                // Cập nhật danh sách planets đã sáng
+                availablePlanets = {
+                  sameBranch: Array.isArray(data.sameBranch) ? data.sameBranch : [],
+                  otherBranch: Array.isArray(data.otherBranch) ? data.otherBranch : []
+                };
+                
+                // Tổng hợp tất cả planet_id đã sáng để hiển thị
+                const allLitPlanets = [
+                  ...availablePlanets.sameBranch,
+                  ...availablePlanets.otherBranch.map(p => typeof p === 'string' ? p : p.planet_id)
+                ];
+                stateData = allLitPlanets;
+                
+                // Debug: Log để kiểm tra
+                console.log('Planets đã sáng:', {
+                  sameBranch: availablePlanets.sameBranch,
+                  otherBranch: availablePlanets.otherBranch,
+                  allLitPlanets: allLitPlanets,
+                  stage: currentStage,
+                  myPlanetId: myPlanetIdFromQuery
+                });
+                
+                // Cập nhật myTeamCorrect dựa trên stage
+                if (currentStage !== 'guess') {
+                  myTeamCorrect = true;
+                }
+                
+                // Parse branch từ planet_id nếu cần
+                if (data.planet_id && myPlanetIdFromQuery) {
+                  const parsed = parsePlanetId(data.planet_id);
+                  if (parsed && parsed.branch && parsed.branch !== myBranch) {
+                    myBranch = parsed.branch;
+                  }
+                }
+                
+                // Hiển thị ranking nếu có
+                if (data.ranking) {
+                  if (data.ranking.guess_rank) {
+                    console.log('Thứ hạng đoán từ:', data.ranking.guess_rank);
+                  }
+                  if (data.ranking.map_rank) {
+                    console.log('Thứ hạng ghép cặp:', data.ranking.map_rank);
+                  }
+                }
+              }
+            } catch (apiError) {
+              // Xử lý các lỗi network/CORS - không spam console
+              if (apiError.message) {
+                const msg = apiError.message.toLowerCase();
+                if (msg.includes('404') || msg.includes('cors') || msg.includes('failed to fetch')) {
+                  // Không log để tránh spam
+                } else if (msg.includes('500') || msg.includes('internal server error')) {
+                  // Lỗi 500 - chỉ log một lần
+                  if (!window._hasLogged500Error) {
+                    console.warn('Lỗi server khi gọi /api/available-planets. Sử dụng local state.');
+                    window._hasLogged500Error = true;
+                  }
+                } else {
+                  // Các lỗi khác - log để debug
+                  console.warn('Lỗi khi gọi /api/available-planets:', apiError.message.substring(0, 100));
+                }
+              }
+            }
+
+            // Thêm planet_id của mình vào danh sách nếu đã đoán đúng
+            if (myTeamCorrect && myPlanetIdFromQuery && !stateData.includes(myPlanetIdFromQuery)) {
+              stateData.push(myPlanetIdFromQuery);
+            }
+            
+            updatePlanetDisplay();
+          } catch (e) {
+            console.error('Lỗi pollState:', e);
+            updatePlanetDisplay();
+          }
+        }
+
+        // Planet click handler
+        planets.forEach(function(p) {
+          p.addEventListener('click', function() {
+            const planetId = getPlanetIdByNum(Number(p.dataset.planet));
+            if (!planetId) return; // Không có planet_id, bỏ qua
+            
+            // Không cho chọn hành tinh của mình
+            if (planetId === myPlanetIdFromQuery) return;
+            
+            // Hiển thị outline khi click
+            selectedPlanetId = planetId;
+            updatePlanetDisplay();
+            
+            // Nếu stage là guess, chưa thể ghép cặp
+            if (currentStage === 'guess') {
+              return;
+            }
+            
+            // Stage là map: chỉ cho phép ghép với hành tinh ở branch khác đã đoán đúng
+            if (currentStage === 'map') {
+              const parsedInfo = parsePlanetId(planetId);
+              const planetBranch = parsedInfo?.branch ?? null;
+              
+              // Kiểm tra cùng branch
+              if (planetBranch === myBranch) {
+                alert('Hành tinh này chỉ được ghép với hành tinh ở nhánh đối diện (nhánh ' + (myBranch === 1 ? '2' : '1') + ').');
+              return;
+            }
+            
+              // Kiểm tra có trong danh sách otherBranch không
+              const canMatch = availablePlanets.otherBranch.some(p => {
+                const pid = typeof p === 'string' ? p : p.planet_id;
+                return pid === planetId;
+              });
+              
+              if (!canMatch) {
+                alert('Hành tinh này chỉ được ghép với hành tinh ở nhánh đối diện (nhánh ' + (myBranch === 1 ? '2' : '1') + ') đã đoán đúng.');
+              return;
+              }
+              
+              // Mở popup xác nhận
+              pendingTargetInfo = { planet_id: planetId };
+              openChooseModal();
+            }
+          });
+        });
+
+        // Initialize
+        loadTeam();
+        pollState().then(() => updatePlanetDisplay());
+        setInterval(pollState, 10000);
+        sendBtn.addEventListener('click', sendGuess);
+        keywordInput.addEventListener('keydown', (e) => { if (e.key === 'Enter') sendGuess(); });
+      })();
+    </script>
+  </body>
+  </html>
